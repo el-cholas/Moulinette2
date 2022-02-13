@@ -1,4 +1,5 @@
 {
 	"chooseLanguage": "Choose the number corresponding to your language:",
-	"invalidLangSelection": "Invalid language selection"
+	"invalidSelection": "Invalid selection",
+	"chooseExercise": "Select the exercise you wish to check:"
 }
