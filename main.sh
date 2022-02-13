@@ -3,13 +3,33 @@
 # GLOBAL VARS
 languagesDir="languages/"
 currentLanguage="en"
+projectDir="project/"
 tmp="NULL" # This is used because I cannot return variables in bash
 
 
 main () {
 	chooseLanguage
 	chooseExercise
+	if [ -d "$projectDir" ]; then
+        cd $projectDir
+		git pull
+        cd ..
+    else
+        projectDirEmpty
+    fi
 	$tmp
+}
+
+projectDirEmpty () {
+    echo -n "$(readJSON "pasteGitURL") "
+    read gitURL
+    if $(git clone $gitURL); then
+        # This gets the name of the folder in the git then removes the .git
+        gitFolderName=$(echo $gitURL | rev | cut -d '/' -f1 | rev | sed 's/.git//g')
+        mv $gitFolderName $GITDIR
+    else
+    	echo "$(readJSON "gitCloneFailed") "
+    fi
 }
 
 # MENUS AND SELECTION STUFF, THESE COMMANDS ARE ALL THE SAME
@@ -87,6 +107,11 @@ readJSON () {
 		filename="$languagesDir$2.json"
 	fi
 	grep -o '"'$fieldName'": "[^"]*' $filename | grep -o '[^"]*$'
+}
+
+# Exercises
+c-piscine-shell-00 () {
+	local var=""
 }
 
 main

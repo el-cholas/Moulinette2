@@ -1,5 +1,7 @@
 {
 	"chooseLanguage": "Choose the number corresponding to your language:",
 	"invalidSelection": "Invalid selection",
-	"chooseExercise": "Select the exercise you wish to check:"
+	"chooseExercise": "Select the exercise you wish to check:",
+	"pasteGitURL": "Paste the git url here:",
+	"gitCloneFailed": "Git clone failed"
 }
