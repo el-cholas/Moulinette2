@@ -11,13 +11,12 @@ main () {
 	chooseLanguage
 	chooseExercise
 	if [ -d "$projectDir" ]; then
-        cd $projectDir
-		git pull
-        cd ..
+        projectDirEmpty
     else
         projectDirEmpty
     fi
 	$tmp
+	rm $projectDir -r
 }
 
 projectDirEmpty () {
@@ -26,7 +25,7 @@ projectDirEmpty () {
     if $(git clone $gitURL); then
         # This gets the name of the folder in the git then removes the .git
         gitFolderName=$(echo $gitURL | rev | cut -d '/' -f1 | rev | sed 's/.git//g')
-        mv $gitFolderName $GITDIR
+        mv $gitFolderName $projectDir
     else
     	echo "$(readJSON "gitCloneFailed") "
     fi
