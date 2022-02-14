@@ -10,5 +10,6 @@
 	"errorWrongFileSize": "El tamaño del archivo es incorrecto",
 	"errorWrongFileName": "El nombre del archivo es incorrecto",
 	"errorFailedToExecute": "El script no pudo ejecutarse",
-	"errorFileContentsIncorrect": "El contenido del archivo es incorrecto"
+	"errorFileContentsIncorrect": "El contenido del archivo es incorrecto",
+	"errorLogTitle": "Moulinette2 by el-cholas - Registro de errores"
 }

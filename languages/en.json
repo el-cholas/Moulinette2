@@ -1,6 +1,6 @@
 {
 	"chooseLanguage": "Choose the number corresponding to your language:",
-	"invalidSelection": "Invalid selection",
+	"invalidLangSelection": "Invalid selection",
 	"chooseExercise": "Select the exercise you wish to check:",
 	"pasteGitURL": "Paste the git url here:",
 	"gitCloneFailed": "Git clone failed",
@@ -11,4 +11,5 @@
 	"errorWrongFileName": "The filename is incorrect",
 	"errorFailedToExecute": "The script failed to execute",
 	"errorFileContentsIncorrect": "The file contents are incorrect",
+	"errorLogTitle": "Moulinette2 by el-cholas - Error Log"
 }

@@ -15,7 +15,7 @@ main () {
 	if ! [ -d "$projectDir" ]; then
         projectDirEmpty
     fi
-    echo " " > $errorFile
+    echo "$(readJSON "errorLogTitle")" > $errorFile
 	$tmp $tmp
 	# rm -rf $projectDir
 }
@@ -51,7 +51,7 @@ readJSON () {
 # MENUS AND SELECTION STUFF, THESE COMMANDS ARE ALL THE SAME
 chooseLanguage () {
 	# If I could I would make a function to list an array and make a selection so I can resuse this code super easily
-	# But bash sucks ass a bit with storing variables and returning variable
+	# But bash sucks ass a bit with storing and returning variable
 
 	# Store all json files into an array
 	local files=($(find $languagesDir -name "*.json" -type f -exec basename {} .json ";"))
