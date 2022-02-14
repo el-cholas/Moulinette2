@@ -17,7 +17,7 @@ main () {
     fi
     echo "$(readJSON "errorLogTitle")" > $errorFile
 	$tmp $tmp
-	# rm -rf $projectDir
+	rm -rf $projectDir
 }
 
 projectDirEmpty () {
