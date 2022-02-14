@@ -27,6 +27,7 @@ projectDirEmpty () {
         # This gets the name of the folder in the git then removes the .git
         gitFolderName=$(echo $gitURL | rev | cut -d '/' -f1 | rev | sed 's/.git//g')
         mv $gitFolderName $projectDir
+        rm -rf $projectDir/.git
     else
     	echo "$(readJSON "gitCloneFailed") "
     fi
@@ -143,7 +144,6 @@ c-piscine-shell-00-mac () {
 	correctOut=$($script $correctDir)
 	studentOut=$($script $studentDir)
 
-	rm -rf $studentDir $correctDir
 	if  [ "$?" != "0" ]; then
 		echo $exercise - $(readJSON "FAIL")
 		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
@@ -167,6 +167,7 @@ c-piscine-shell-00-mac () {
 	else
 		echo $exercise - $(readJSON "PASS")
 	fi
+	rm -rf $studentDir $correctDir
 
 	# ex02
 	exercise="ex02"
@@ -179,7 +180,6 @@ c-piscine-shell-00-mac () {
 	correctOut=$($script $correctDir)
 	studentOut=$($script $studentDir)
 
-	rm -rf $studentDir $correctDir
 	if  [ "$?" != "0" ]; then
 		echo $exercise - $(readJSON "FAIL")
 		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
@@ -203,6 +203,7 @@ c-piscine-shell-00-mac () {
 	else
 		echo $exercise - $(readJSON "PASS")
 	fi
+	rm -rf $studentDir $correctDir
 
 	# ex03
 	exercise="ex03"
@@ -220,6 +221,81 @@ c-piscine-shell-00-mac () {
 	script="midLS"
 	exercise="ex04"
 	commandDiff=$(diff <(bash $correctPath/$exercise/$script) <(bash $currentPath/$exercise/$script))
+	if  [ "$?" != "0" ]; then
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
+	elif [ ${#commandDiff} == "0" ]; then
+		echo $exercise - $(readJSON "PASS")
+	else
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $commandDiff >> $errorFile
+	fi
+
+	# ex05
+	script="git_commit.sh | cat -e"
+	exercise="ex05"
+	commandDiff=$(diff <(bash $correctPath/$exercise/$script) <(bash $currentPath/$exercise/$script))
+	if  [ "$?" != "0" ]; then
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
+	elif [ ${#commandDiff} == "0" ]; then
+		echo $exercise - $(readJSON "PASS")
+	else
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $commandDiff >> $errorFile
+	fi
+
+	# ex06
+	script="git_ignore.sh | cat -e"
+	exercise="ex06"
+	touch "#IGNOREMEPLS" "#IGNOREME_"
+	commandDiff=$(diff <(bash $correctPath/$exercise/$script) <(bash $currentPath/$exercise/$script))
+	if  [ "$?" != "0" ]; then
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
+	elif [ ${#commandDiff} == "0" ]; then
+		echo $exercise - $(readJSON "PASS")
+	else
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $commandDiff >> $errorFile
+	fi
+	rm "#IGNOREMEPLS" "#IGNOREME_"
+
+	# ex07
+	script="b"
+	exercise="ex07"
+	commandDiff=$(diff <(cat $correctPath/$exercise/$script) <(cat $currentPath/$exercise/$script))
+	if  [ "$?" != "0" ]; then
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
+	elif [ ${#commandDiff} == "0" ]; then
+		echo $exercise - $(readJSON "PASS")
+	else
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $commandDiff >> $errorFile
+	fi
+
+	# ex08
+	script="clean"
+	exercise="ex08"
+	touch "hello1~" "hello2~" "#hello1#" "#hello2#" "~hello1" "~hello2" "hello1#" "hello2#" "#hello1" "#hello2"
+	commandDiff=$(diff <(cat $correctPath/$exercise/$script) <(cat $currentPath/$exercise/$script))
+	if  [ "$?" != "0" ]; then
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
+	elif [ ${#commandDiff} == "0" ]; then
+		echo $exercise - $(readJSON "PASS")
+	else
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $commandDiff >> $errorFile
+	fi
+	rm "hello1~" "hello2~" "#hello1#" "#hello2#" "~hello1" "~hello2" "hello1#" "hello2#" "#hello1" "#hello2"
+
+	# ex09
+	# I don't really know how to test this, but this should be sufficient
+	script="ft_magic"
+	exercise="ex09"
+	commandDiff=$(diff <(cat $correctPath/$exercise/$script) <(cat $currentPath/$exercise/$script))
 	if  [ "$?" != "0" ]; then
 		echo $exercise - $(readJSON "FAIL")
 		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
