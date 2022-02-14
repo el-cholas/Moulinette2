@@ -10,13 +10,12 @@ tmp="NULL" # This is used because I cannot return variables in bash
 main () {
 	chooseLanguage
 	chooseExercise
-	if [ -d "$projectDir" ]; then
-        projectDirEmpty
-    else
+	if ! [ -d "$projectDir" ]; then
         projectDirEmpty
     fi
-	$tmp
-	rm $projectDir -r
+
+	$tmp $tmp
+	# rm -rf $projectDir
 }
 
 projectDirEmpty () {
@@ -29,6 +28,22 @@ projectDirEmpty () {
     else
     	echo "$(readJSON "gitCloneFailed") "
     fi
+}
+
+readJSON () {
+	# Usage is " $(readJSON "key") "
+	local fieldName=$1
+
+	# $2 is a very buggy variable to use, I don't use it
+
+	# If $2 is an empty variable, set it as the default language
+	if [ -z "$2" ]
+	then
+    	filename="$languagesDir$currentLanguage.json"
+	else
+		filename="$languagesDir$2.json"
+	fi
+	grep -o '"'$fieldName'": "[^"]*' $filename | grep -o '[^"]*$'
 }
 
 # MENUS AND SELECTION STUFF, THESE COMMANDS ARE ALL THE SAME
@@ -67,7 +82,7 @@ chooseExercise () {
 	# But bash sucks ass a bit with storing variables and returning variable
 
 	# Store all json files into an array
-	local files=($(find ".secret/" -name "c-piscine*" -type d -exec basename {} ";"))
+	local files=($(find ".DS_Store/" -name "c-piscine*" -type d -exec basename {} ";"))
 	local fileIndex=1
 
 	# Loop through language files and print them out
@@ -92,25 +107,29 @@ chooseExercise () {
 	fi
 }
 
-readJSON () {
-	# Usage is " $(readJSON "key") "
-	local fieldName=$1
-
-	# $2 is a very buggy variable to use, I don't use it
-
-	# If $2 is an empty variable, set it as the default language
-	if [ -z "$2" ]
-	then
-    	filename="$languagesDir$currentLanguage.json"
-	else
-		filename="$languagesDir$2.json"
-	fi
-	grep -o '"'$fieldName'": "[^"]*' $filename | grep -o '[^"]*$'
+# Exercises
+c-piscine-shell-00-mac () {
+	local var=""
 }
 
-# Exercises
-c-piscine-shell-00 () {
-	local var=""
+c-piscine-shell-01-mac () {
+	local correctPath=".DS_Store/$1"
+	local currentPath=${projectDir///}
+
+	# ex01
+	local script="print_groups.sh"
+	FT_USER=$(whoami)
+	# export $FT_USER
+	output=$(./$currentPath/ex01/$script)
+	correct=$(./$correctPath/ex01/$script)
+
+	if [ "$output" == "$correct" ]; then
+		echo PASS
+	else
+		echo FAIL
+	fi
+
+	# ex02
 }
 
 main
