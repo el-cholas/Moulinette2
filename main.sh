@@ -111,7 +111,64 @@ chooseExercise () {
 
 # Exercises
 c-piscine-shell-00-mac () {
-	local var=""
+	local correctPath=".DS_Store/$1"
+	local currentPath=${projectDir///}
+
+	local script=""
+	local exercise=""
+	local commandDiff=""
+
+	# ex00
+	script="z"
+	exercise="ex00"
+	commandDiff=$(diff <(cat $correctPath/$exercise/$script) <(cat $currentPath/$exercise/$script))
+	if  [ "$?" != "0" ]; then
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
+	elif [ ${#commandDiff} == "0" ]; then
+		echo $exercise - $(readJSON "PASS")
+	else
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $commandDiff >> $errorFile
+	fi
+
+	# ex01
+	exercise="ex01"
+	script="ls -l"
+	studentDir="student/"
+	correctDir="correct/"
+	mkdir $studentDir $correctDir
+	tar -xf $correctPath/$exercise/testShell00.tar -C $correctDir
+	tar -xf $currentPath/$exercise/testShell00.tar -C $studentDir
+	correctOut=$($script $correctDir)
+	studentOut=$($script $studentDir)
+
+	rm -rf $studentDir $correctDir
+	if  [ "$?" != "0" ]; then
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
+	elif [ "$(echo $studentOut | cut -d " " -f 3)" != "$(echo $correctOut | cut -d " " -f 3)" ]; then
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $(readJSON "errorWrongPermissions") >> $errorFile
+	elif [ "$(echo $studentOut | cut -d " " -f 4)" != "$(echo $correctOut | cut -d " " -f 4)" ]; then
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $(readJSON "errorIncorrectHardLinks") >> $errorFile
+	elif [ "$(echo $studentOut | cut -d " " -f 7)" != "$(echo $correctOut | cut -d " " -f 7)" ]; then
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $(readJSON "errorWrongFileSize") >> $errorFile
+	elif [ "$(echo $studentOut | cut -d " " -f 8,9)" != "$(echo $correctOut | cut -d " " -f 8,9)" ]; then
+		# Here I should validate whether the input number from the student is a valid year or the correct hour
+		# But I am lazy
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $(readJSON "errorIncorrectDate") >> $errorFile
+	elif [ "$(echo $studentOut | cut -d " " -f 11)" != "$(echo $correctOut | cut -d " " -f 11)" ]; then
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $(readJSON "errorWrongFileName") >> $errorFile
+	else
+		echo $exercise - $(readJSON "PASS")
+	fi
+
+
 }
 
 c-piscine-shell-01-mac () {

@@ -9,7 +9,9 @@
 	"errorWrongPermissions": "Los permisos del archivo son incorrectos",
 	"errorWrongFileSize": "El tamaño del archivo es incorrecto",
 	"errorWrongFileName": "El nombre del archivo es incorrecto",
-	"errorFailedToExecute": "El script no pudo ejecutarse",
+	"errorFailedToExecute": "El script no pudo ejecutarse, comprobar los permisos y el nombre del archivo",
 	"errorFileContentsIncorrect": "El contenido del archivo es incorrecto",
-	"errorLogTitle": "Moulinette2 by el-cholas - Registro de errores"
+	"errorLogTitle": "Moulinette2 by el-cholas - Registro de errores",
+	"errorIncorrectHardLinks": "Número incorrecto de Hard Links",
+	"errorIncorrectDate": "La fecha es incorrecta"
 }
