@@ -15,8 +15,7 @@ main () {
 	if ! [ -d "$projectDir" ]; then
         projectDirEmpty
     fi
-
-    rm $errorFile
+    echo " " > $errorFile
 	$tmp $tmp
 	# rm -rf $projectDir
 }
@@ -127,69 +126,87 @@ c-piscine-shell-01-mac () {
 	script="print_groups.sh"
 	exercise="ex01"
 	FT_USER=$(whoami)
-	commandDiff=$(diff <(./$currentPath/$exercise/$script) <(./$correctPath/$exercise/$script))
-	if [ ${#commandDiff} == "0" ]; then
+	export FT_USER
+	commandDiff=$(diff <(./$correctPath/$exercise/$script) <(./$currentPath/$exercise/$script))
+	if  [ "$?" != "0" ]; then
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
+	elif [ ${#commandDiff} == "0" ]; then
 		echo $exercise - $(readJSON "PASS")
 	else
 		echo $exercise - $(readJSON "FAIL")
-		echo $exercise - $commandDiff > $errorFile
+		echo $exercise - $commandDiff >> $errorFile
 	fi
 
 	# ex02
 	script="find_sh.sh | cat -e"
 	exercise="ex02"
-	commandDiff=$(diff <(./$currentPath/$exercise/$script) <(./$correctPath/$exercise/$script))
-	if [ ${#commandDiff} == "0" ]; then
+	commandDiff=$(diff <(./$correctPath/$exercise/$script) <(./$currentPath/$exercise/$script))
+	status=$?
+	if [ "$?" != "0" ]; then
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
+	elif [ ${#commandDiff} == "0" ]; then
 		echo $exercise - $(readJSON "PASS")
 	else
 		echo $exercise - $(readJSON "FAIL")
-		echo $exercise - $commandDiff > $errorFile
+		echo $exercise - $commandDiff >> $errorFile
 	fi
 
 	# ex03
 	script="/count_files.sh | cat -e"
 	exercise="ex03"
-	commandDiff=$(diff <(./$currentPath/$exercise/$script) <(./$correctPath/$exercise/$script))
-	if [ ${#commandDiff} == "0" ]; then
+	commandDiff=$(diff <(./$correctPath/$exercise/$script) <(./$currentPath/$exercise/$script))
+	if [ "$?" != "0" ]; then
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
+	elif [ ${#commandDiff} == "0" ]; then
 		echo $exercise - $(readJSON "PASS")
 	else
 		echo $exercise - $(readJSON "FAIL")
-		echo $exercise - $commandDiff > $errorFile
+		echo $exercise - $commandDiff >> $errorFile
 	fi
 
 	# ex04
 	script="MAC.sh"
 	exercise="ex04"
-	commandDiff=$(diff <(bash $currentPath/$exercise/$script) <(bash $correctPath/$exercise/$script))
-	if [ ${#commandDiff} == "0" ]; then
+	commandDiff=$(diff <(bash $correctPath/$exercise/$script) <(bash $currentPath/$exercise/$script))
+	if [ "$?" != "0" ]; then
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
+	elif [ ${#commandDiff} == "0" ]; then
 		echo $exercise - $(readJSON "PASS")
 	else
 		echo $exercise - $(readJSON "FAIL")
-		echo $exercise - $commandDiff > $errorFile
+		echo $exercise - $commandDiff >> $errorFile
 	fi
 
 	# ex05
-	script=""
 	exercise="ex05"
+	pass="True"
 	cd $currentPath/$exercise
 	studentOut=$(ls -lRa *MaRV* | cat -e)
+	studentContents=$(cat *MaRV*)
+	if [ "$?" != "0" ]; then
+		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
+		pass="False"
+	fi
 	cd $currentDir
 	cd $correctPath/$exercise
 	correctOut=$(ls -lRa *MaRV* | cat -e)
+	correctContents=$(cat *MaRV*)
 	cd $currentDir
-	# commandDiff=$(diff <(ls $currentPath/$exercise/$script/) <(ls $correctPath/$exercise/$script/))
-	# echo $studentOut
-	# echo $correctOut
-
-	pass="True"
 	if [ "$(echo $studentOut | cut -d " " -f 1)" != "$(echo $correctOut | cut -d " " -f 1)" ]; then
-		echo $exercise - $(readJSON "errorWrongPermissions") > $errorFile
+		echo $exercise - $(readJSON "errorWrongPermissions") >> $errorFile
 		pass="False"
 	elif [ "$(echo $studentOut | cut -d " " -f 5)" != "$(echo $correctOut | cut -d " " -f 5)" ]; then
-		echo $exercise - $(readJSON "errorWrongFileSize") > $errorFile
+		echo $exercise - $(readJSON "errorWrongFileSize") >> $errorFile
 		pass="False"
 	elif [ "$(echo $studentOut | cut -d " " -f 9)" != "$(echo $correctOut | cut -d " " -f 9)" ]; then
-		echo $exercise - $(readJSON "errorWrongFileName") > $errorFile
+		echo $exercise - $(readJSON "errorWrongFileName") >> $errorFile
+		pass="False"
+	elif [ "$studentContents" != "$correctContents" ]; then
+		echo $exercise - $(readJSON "errorFileContentsIncorrect") >> $errorFile
 		pass="False"
 	fi
 
@@ -198,6 +215,49 @@ c-piscine-shell-01-mac () {
 	else
 		echo $exercise - $(readJSON "FAIL")
 	fi
+
+	# ex06
+	script="skip.sh"
+	exercise="ex06"
+	commandDiff=$(diff <(bash $correctPath/$exercise/$script) <(bash $currentPath/$exercise/$script))
+	if [ "$?" != "0" ]; then
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
+	elif [ ${#commandDiff} == "0" ]; then
+		echo $exercise - $(readJSON "PASS")
+	else
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $commandDiff >> $errorFile
+	fi
+
+	# ex07
+	script="r_dwssap.sh"
+	exercise="ex07"
+	# permissions didn't need to be configured correctly for 07 - maybe true for rest
+	FT_LINE1=15
+	FT_LINE2=20
+	export FT_LINE1
+	export FT_LINE2
+	commandDiff=$(diff <(./$correctPath/$exercise/$script) <(./$currentPath/$exercise/$script))
+	if [ "$?" != "0" ]; then
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
+	elif [ ${#commandDiff} == "0" ]; then
+		echo $exercise - $(readJSON "PASS")
+	else
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $commandDiff >> $errorFile
+	fi
+
+	# ex08
+	script="add_chelou.sh"
+	exercise="ex08"
+	FT_NBR1="idk how to"
+	FT_NBR2=rcrdmddd
+	export FT_NBR1
+	export FT_NBR2
+	#commandDiff=$(diff <(bash $currentPath/$exercise/$script) <(bash $correctPath/$exercise/$script))
+	echo $exercise - "I don't know"
 }
 
 main

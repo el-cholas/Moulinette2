@@ -8,5 +8,7 @@
 	"FAIL": "FAIL",
 	"errorWrongPermissions": "The file permissions are incorrect",
 	"errorWrongFileSize": "The file size is incorrect",
-	"errorWrongFileName": "The filename is incorrect"
+	"errorWrongFileName": "The filename is incorrect",
+	"errorFailedToExecute": "The script failed to execute",
+	"errorFileContentsIncorrect": "The file contents are incorrect",
 }
