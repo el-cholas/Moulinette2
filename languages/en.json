@@ -3,5 +3,7 @@
 	"invalidSelection": "Invalid selection",
 	"chooseExercise": "Select the exercise you wish to check:",
 	"pasteGitURL": "Paste the git url here:",
-	"gitCloneFailed": "Git clone failed"
+	"gitCloneFailed": "Git clone failed",
+	"PASS": "PASS",
+	"FAIL": "FAIL",
 }

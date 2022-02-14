@@ -3,5 +3,7 @@
 	"invalidLangSelection": "Selección inválida",
 	"chooseExercise": "Seleccione el ejercicio que desea comprobar:",
 	"pasteGitURL": "Pegue aquí la url de git:",
-	"gitCloneFailed":"Fallo en git clone"
+	"gitCloneFailed":"Fallo en git clone",
+	"PASS": "PASS",
+	"FAIL": "FAIL",
 }

@@ -116,20 +116,59 @@ c-piscine-shell-01-mac () {
 	local correctPath=".DS_Store/$1"
 	local currentPath=${projectDir///}
 
+	local script=""
+	local exercise=""
+	local student=""
+	local correct=""
+
 	# ex01
-	local script="print_groups.sh"
+	script="print_groups.sh"
+	exercise="ex01"
 	FT_USER=$(whoami)
 	# export $FT_USER
-	output=$(./$currentPath/ex01/$script)
-	correct=$(./$correctPath/ex01/$script)
+	student=$(./$currentPath/$exercise/$script)
+	correct=$(./$correctPath/$exercise/$script)
+	# Real moulinette is hella picky about this
+	catXARGS="$(cat $currentPath/$exercise/$script | grep 'xargs echo -n')"
 
-	if [ "$output" == "$correct" ]; then
-		echo PASS
+	if [ "$student" == "$correct" ] && [ ${#catXARGS} != "0" ]; then
+		echo $exercise - $(readJSON "PASS")
 	else
-		echo FAIL
+		echo $exercise - $(readJSON "FAIL")
 	fi
 
 	# ex02
+	script="find_sh.sh | cat -e"
+	exercise="ex02"
+	student=$(./$currentPath/$exercise/$script)
+	correct=$(./$correctPath/$exercise/$script)
+	if [ "$student" == "$correct" ]; then
+		echo $exercise - $(readJSON "PASS")
+	else
+		echo $exercise - $(readJSON "FAIL")
+	fi
+
+	# ex03
+	script="/count_files.sh | cat -e"
+	exercise="ex03"
+	student=$(./$currentPath/$exercise/$script)
+	correct=$(./$correctPath/$exercise/$script)
+	if [ "$student" == "$correct" ]; then
+		echo $exercise - $(readJSON "PASS")
+	else
+		echo $exercise - $(readJSON "FAIL")
+	fi
+
+	# ex04
+	script="MAC.sh"
+	exercise="ex04"
+	student=$(bash $currentPath/$exercise/$script)
+	correct=$(bash $correctPath/$exercise/$script)
+	if [ "$student" == "$correct" ]; then
+		echo $exercise - $(readJSON "PASS")
+	else
+		echo $exercise - $(readJSON "FAIL")
+	fi
 }
 
 main
