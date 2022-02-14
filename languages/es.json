@@ -4,8 +4,8 @@
 	"chooseExercise": "Seleccione el ejercicio que desea comprobar:",
 	"pasteGitURL": "Pegue aquí la url de git:",
 	"gitCloneFailed":"Fallo en git clone",
-	"PASS": "PASS",
-	"FAIL": "FAIL",
+	"PASS": "OK",
+	"FAIL": "KO",
 	"errorWrongPermissions": "Los permisos del archivo son incorrectos",
 	"errorWrongFileSize": "El tamaño del archivo es incorrecto",
 	"errorWrongFileName": "El nombre del archivo es incorrecto",
@@ -13,5 +13,6 @@
 	"errorFileContentsIncorrect": "El contenido del archivo es incorrecto",
 	"errorLogTitle": "Moulinette2 by el-cholas - Registro de errores",
 	"errorIncorrectHardLinks": "Número incorrecto de Hard Links",
-	"errorIncorrectDate": "La fecha es incorrecta"
+	"errorIncorrectDate": "La fecha es incorrecta",
+	"createdBy": "Esto fue hecho por xcarroll en slack con mucho amor y cafeína"
 }

@@ -10,6 +10,7 @@ currentDir=$(pwd)
 
 
 main () {
+	git pull
 	chooseLanguage
 	chooseExercise
 	if ! [ -d "$projectDir" ]; then
@@ -18,6 +19,7 @@ main () {
     echo "$(readJSON "errorLogTitle")" > $errorFile
 	$tmp $tmp
 	# rm -rf $projectDir
+	echo "\n\n$(readJSON "createdBy")\n"
 }
 
 projectDirEmpty () {
@@ -320,6 +322,7 @@ c-piscine-shell-01-mac () {
 	exercise="ex01"
 	FT_USER=$(whoami)
 	export FT_USER
+	chmod a+x $currentPath/$exercise/$script 2>> $errorFile
 	commandDiff=$(diff <(./$correctPath/$exercise/$script) <(./$currentPath/$exercise/$script)) 2>> $errorFile
 	if  [ "$?" != "0" ]; then
 		echo $exercise - $(readJSON "FAIL")
@@ -334,6 +337,7 @@ c-piscine-shell-01-mac () {
 	# ex02
 	script="find_sh.sh | cat -e"
 	exercise="ex02"
+	chmod a+x $currentPath/$exercise/$script 2>> $errorFile
 	commandDiff=$(diff <(./$correctPath/$exercise/$script) <(./$currentPath/$exercise/$script)) 2>> $errorFile
 	status=$?
 	if [ "$?" != "0" ]; then
@@ -349,6 +353,7 @@ c-piscine-shell-01-mac () {
 	# ex03
 	script="/count_files.sh | cat -e"
 	exercise="ex03"
+	chmod a+x $currentPath/$exercise/$script 2>> $errorFile
 	commandDiff=$(diff <(./$correctPath/$exercise/$script) <(./$currentPath/$exercise/$script)) 2>> $errorFile
 	if [ "$?" != "0" ]; then
 		echo $exercise - $(readJSON "FAIL")
@@ -431,6 +436,7 @@ c-piscine-shell-01-mac () {
 	FT_LINE2=20
 	export FT_LINE1
 	export FT_LINE2
+	chmod a+x $currentPath/$exercise/$script 2>> $errorFile
 	commandDiff=$(diff <(./$correctPath/$exercise/$script) <(./$currentPath/$exercise/$script)) 2>> $errorFile
 	if [ "$?" != "0" ]; then
 		echo $exercise - $(readJSON "FAIL")

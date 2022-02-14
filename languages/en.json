@@ -13,5 +13,6 @@
 	"errorFileContentsIncorrect": "The file contents are incorrect",
 	"errorLogTitle": "Moulinette2 by el-cholas - Error Log",
 	"errorIncorrectHardLinks": "Incorrect number of hard links",
-	"errorIncorrectDate": "The date is incorrect"
+	"errorIncorrectDate": "The date is incorrect",
+	"createdBy": "This was made by xcarroll on slack with lots of love and caffeine"
 }
