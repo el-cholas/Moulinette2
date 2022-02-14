@@ -6,4 +6,7 @@
 	"gitCloneFailed": "Git clone failed",
 	"PASS": "PASS",
 	"FAIL": "FAIL",
+	"errorWrongPermissions": "The file permissions are incorrect",
+	"errorWrongFileSize": "The file size is incorrect",
+	"errorWrongFileName": "The filename is incorrect"
 }

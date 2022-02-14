@@ -5,6 +5,8 @@ languagesDir="languages/"
 currentLanguage="en"
 projectDir="project/"
 tmp="NULL" # This is used because I cannot return variables in bash
+errorFile="errors.txt"
+currentDir=$(pwd)
 
 
 main () {
@@ -14,6 +16,7 @@ main () {
         projectDirEmpty
     fi
 
+    rm $errorFile
 	$tmp $tmp
 	# rm -rf $projectDir
 }
@@ -118,53 +121,79 @@ c-piscine-shell-01-mac () {
 
 	local script=""
 	local exercise=""
-	local student=""
-	local correct=""
+	local commandDiff=""
 
 	# ex01
 	script="print_groups.sh"
 	exercise="ex01"
 	FT_USER=$(whoami)
-	# export $FT_USER
-	student=$(./$currentPath/$exercise/$script)
-	correct=$(./$correctPath/$exercise/$script)
-	# Real moulinette is hella picky about this
-	catXARGS="$(cat $currentPath/$exercise/$script | grep 'xargs echo -n')"
-
-	if [ "$student" == "$correct" ] && [ ${#catXARGS} != "0" ]; then
+	commandDiff=$(diff <(./$currentPath/$exercise/$script) <(./$correctPath/$exercise/$script))
+	if [ ${#commandDiff} == "0" ]; then
 		echo $exercise - $(readJSON "PASS")
 	else
 		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $commandDiff > $errorFile
 	fi
 
 	# ex02
 	script="find_sh.sh | cat -e"
 	exercise="ex02"
-	student=$(./$currentPath/$exercise/$script)
-	correct=$(./$correctPath/$exercise/$script)
-	if [ "$student" == "$correct" ]; then
+	commandDiff=$(diff <(./$currentPath/$exercise/$script) <(./$correctPath/$exercise/$script))
+	if [ ${#commandDiff} == "0" ]; then
 		echo $exercise - $(readJSON "PASS")
 	else
 		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $commandDiff > $errorFile
 	fi
 
 	# ex03
 	script="/count_files.sh | cat -e"
 	exercise="ex03"
-	student=$(./$currentPath/$exercise/$script)
-	correct=$(./$correctPath/$exercise/$script)
-	if [ "$student" == "$correct" ]; then
+	commandDiff=$(diff <(./$currentPath/$exercise/$script) <(./$correctPath/$exercise/$script))
+	if [ ${#commandDiff} == "0" ]; then
 		echo $exercise - $(readJSON "PASS")
 	else
 		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $commandDiff > $errorFile
 	fi
 
 	# ex04
 	script="MAC.sh"
 	exercise="ex04"
-	student=$(bash $currentPath/$exercise/$script)
-	correct=$(bash $correctPath/$exercise/$script)
-	if [ "$student" == "$correct" ]; then
+	commandDiff=$(diff <(bash $currentPath/$exercise/$script) <(bash $correctPath/$exercise/$script))
+	if [ ${#commandDiff} == "0" ]; then
+		echo $exercise - $(readJSON "PASS")
+	else
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $commandDiff > $errorFile
+	fi
+
+	# ex05
+	script=""
+	exercise="ex05"
+	cd $currentPath/$exercise
+	studentOut=$(ls -lRa *MaRV* | cat -e)
+	cd $currentDir
+	cd $correctPath/$exercise
+	correctOut=$(ls -lRa *MaRV* | cat -e)
+	cd $currentDir
+	# commandDiff=$(diff <(ls $currentPath/$exercise/$script/) <(ls $correctPath/$exercise/$script/))
+	# echo $studentOut
+	# echo $correctOut
+
+	pass="True"
+	if [ "$(echo $studentOut | cut -d " " -f 1)" != "$(echo $correctOut | cut -d " " -f 1)" ]; then
+		echo $exercise - $(readJSON "errorWrongPermissions") > $errorFile
+		pass="False"
+	elif [ "$(echo $studentOut | cut -d " " -f 5)" != "$(echo $correctOut | cut -d " " -f 5)" ]; then
+		echo $exercise - $(readJSON "errorWrongFileSize") > $errorFile
+		pass="False"
+	elif [ "$(echo $studentOut | cut -d " " -f 9)" != "$(echo $correctOut | cut -d " " -f 9)" ]; then
+		echo $exercise - $(readJSON "errorWrongFileName") > $errorFile
+		pass="False"
+	fi
+
+	if [ "$pass" == "True" ]; then
 		echo $exercise - $(readJSON "PASS")
 	else
 		echo $exercise - $(readJSON "FAIL")
