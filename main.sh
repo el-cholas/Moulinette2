@@ -17,7 +17,7 @@ main () {
     fi
     echo "$(readJSON "errorLogTitle")" > $errorFile
 	$tmp $tmp
-	rm -rf $projectDir
+	# rm -rf $projectDir
 }
 
 projectDirEmpty () {
@@ -320,7 +320,7 @@ c-piscine-shell-01-mac () {
 	exercise="ex01"
 	FT_USER=$(whoami)
 	export FT_USER
-	commandDiff=$(diff <(./$correctPath/$exercise/$script) <(./$currentPath/$exercise/$script))
+	commandDiff=$(diff <(./$correctPath/$exercise/$script) <(./$currentPath/$exercise/$script)) 2>> $errorFile
 	if  [ "$?" != "0" ]; then
 		echo $exercise - $(readJSON "FAIL")
 		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
@@ -334,7 +334,7 @@ c-piscine-shell-01-mac () {
 	# ex02
 	script="find_sh.sh | cat -e"
 	exercise="ex02"
-	commandDiff=$(diff <(./$correctPath/$exercise/$script) <(./$currentPath/$exercise/$script))
+	commandDiff=$(diff <(./$correctPath/$exercise/$script) <(./$currentPath/$exercise/$script)) 2>> $errorFile
 	status=$?
 	if [ "$?" != "0" ]; then
 		echo $exercise - $(readJSON "FAIL")
@@ -349,7 +349,7 @@ c-piscine-shell-01-mac () {
 	# ex03
 	script="/count_files.sh | cat -e"
 	exercise="ex03"
-	commandDiff=$(diff <(./$correctPath/$exercise/$script) <(./$currentPath/$exercise/$script))
+	commandDiff=$(diff <(./$correctPath/$exercise/$script) <(./$currentPath/$exercise/$script)) 2>> $errorFile
 	if [ "$?" != "0" ]; then
 		echo $exercise - $(readJSON "FAIL")
 		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
@@ -363,7 +363,7 @@ c-piscine-shell-01-mac () {
 	# ex04
 	script="MAC.sh"
 	exercise="ex04"
-	commandDiff=$(diff <(bash $correctPath/$exercise/$script) <(bash $currentPath/$exercise/$script))
+	commandDiff=$(diff <(bash $correctPath/$exercise/$script) <(bash $currentPath/$exercise/$script)) 2>> $errorFile
 	if [ "$?" != "0" ]; then
 		echo $exercise - $(readJSON "FAIL")
 		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
@@ -377,9 +377,9 @@ c-piscine-shell-01-mac () {
 	# ex05
 	exercise="ex05"
 	pass="True"
-	cd $currentPath/$exercise
-	studentOut=$(ls -lRa *MaRV* | cat -e)
-	studentContents=$(cat *MaRV*)
+	cd $currentPath/$exercise 2>>  $errorFile
+	studentOut=$(ls -lRa *MaRV* | cat -e) 2>> $errorFile
+	studentContents=$(cat *MaRV*) 2>> $errorFile
 	if [ "$?" != "0" ]; then
 		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
 		pass="False"
@@ -412,7 +412,7 @@ c-piscine-shell-01-mac () {
 	# ex06
 	script="skip.sh"
 	exercise="ex06"
-	commandDiff=$(diff <(bash $correctPath/$exercise/$script) <(bash $currentPath/$exercise/$script))
+	commandDiff=$(diff <(bash $correctPath/$exercise/$script) <(bash $currentPath/$exercise/$script)) 2>> $errorFile
 	if [ "$?" != "0" ]; then
 		echo $exercise - $(readJSON "FAIL")
 		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
@@ -431,7 +431,7 @@ c-piscine-shell-01-mac () {
 	FT_LINE2=20
 	export FT_LINE1
 	export FT_LINE2
-	commandDiff=$(diff <(./$correctPath/$exercise/$script) <(./$currentPath/$exercise/$script))
+	commandDiff=$(diff <(./$correctPath/$exercise/$script) <(./$currentPath/$exercise/$script)) 2>> $errorFile
 	if [ "$?" != "0" ]; then
 		echo $exercise - $(readJSON "FAIL")
 		echo $exercise - $(readJSON "errorFailedToExecute") >> $errorFile
@@ -449,7 +449,7 @@ c-piscine-shell-01-mac () {
 	FT_NBR2=rcrdmddd
 	export FT_NBR1
 	export FT_NBR2
-	#commandDiff=$(diff <(bash $currentPath/$exercise/$script) <(bash $correctPath/$exercise/$script))
+	#commandDiff=$(diff <(bash $currentPath/$exercise/$script) <(bash $correctPath/$exercise/$script)) >> $errorFile
 	echo $exercise - "I don't know"
 }
 
