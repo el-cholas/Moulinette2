@@ -19,7 +19,9 @@ main () {
     echo "$(readJSON "errorLogTitle")" > $errorFile
 	$tmp $tmp
 	# rm -rf $projectDir
-	echo "\n\n$(readJSON "createdBy")\n"
+	echo ""
+	echo "$(readJSON "createdBy")"
+	echo ""
 }
 
 projectDirEmpty () {
@@ -59,7 +61,7 @@ chooseLanguage () {
 	# Store all json files into an array
 	local files=($(find $languagesDir -name "*.json" -type f -exec basename {} .json ";"))
 	local fileIndex=1
-
+	echo ""
 	# Loop through language files and print them out
 	for languageName in "${files[@]}"
 	do
@@ -70,6 +72,7 @@ chooseLanguage () {
 	# Ask user for language selection
 	echo -n "$(readJSON chooseLanguage) "
 	read languageIndex
+	echo ""
 
 	# If language is valid, set the global language variable, if not, say its invalid
 	if (( $((languageIndex)) <=  fileIndex - 1 && $((languageIndex)) >= 1 ));
@@ -89,7 +92,7 @@ chooseExercise () {
 	# Store all json files into an array
 	local files=($(find ".DS_Store/" -name "c-piscine*" -type d -exec basename {} ";"))
 	local fileIndex=1
-
+	echo ""
 	# Loop through language files and print them out
 	for languageName in "${files[@]}"
 	do
@@ -100,7 +103,7 @@ chooseExercise () {
 	# Ask user for language selection
 	echo -n "$(readJSON chooseExercise) "
 	read languageIndex
-
+	echo ""
 	# If language is valid, set the global language variable, if not, say its invalid
 	if (( $((languageIndex)) <=  fileIndex - 1 && $((languageIndex)) >= 1 ));
 	then
