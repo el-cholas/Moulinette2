@@ -525,4 +525,18 @@ c-piscine-c-00 () {
 	C
 }
 
+c-piscine-c-01 () {
+	local correctPath=".DS_Store/$1"
+	local currentPath=${projectDir///}
+
+	local script=""
+	local exercise=""
+	local commandDiff=""
+	echo ""
+	echo $1 - $(readJSON "notYetMarked")
+	echo $(readJSON "executing") - $(readJSON "testAnyC")
+	echo ""
+	C
+}
+
 main
