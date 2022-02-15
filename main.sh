@@ -46,9 +46,9 @@ readJSON () {
 	# If $2 is an empty variable, set it as the default language
 	if [ -z "$2" ]
 	then
-    	filename="$languagesDir$currentLanguage.json"
+    	filename="$currentDir/$languagesDir$currentLanguage.json"
 	else
-		filename="$languagesDir$2.json"
+		filename="$currentDir/$languagesDir$2.json"
 	fi
 	grep -o '"'$fieldName'": "[^"]*' $filename | grep -o '[^"]*$'
 }
@@ -62,13 +62,20 @@ chooseLanguage () {
 	local files=($(find $languagesDir -name "*.json" -type f -exec basename {} .json ";"))
 	local fileIndex=1
 	echo ""
+
+	# Set the tmp variable as the current language so I can reset it after
+	tmp=$currentLanguage
+
 	# Loop through language files and print them out
 	for languageName in "${files[@]}"
 	do
-		echo $fileIndex $languageName
+		currentLanguage=$languageName
+		echo $fileIndex $(readJSON languageName)
 		fileIndex=$(($fileIndex + 1))
 	done
 
+	# Reset the current language var
+	currentLanguage=$tmp
 	# Ask user for language selection
 	echo -n "$(readJSON chooseLanguage) "
 	read languageIndex
@@ -184,6 +191,8 @@ c-piscine-shell-00-mac () {
 	tar -xf $currentPath/$exercise/exo2.tar -C $studentDir
 	correctOut=$($script $correctDir)
 	studentOut=$($script $studentDir)
+
+	# This currently compares all file sizes exacly even though it shouldn't, I may or may not fix this in the future
 
 	if  [ "$?" != "0" ]; then
 		echo $exercise - $(readJSON "FAIL")
@@ -459,7 +468,49 @@ c-piscine-shell-01-mac () {
 	export FT_NBR1
 	export FT_NBR2
 	#commandDiff=$(diff <(bash $currentPath/$exercise/$script) <(bash $correctPath/$exercise/$script)) >> $errorFile
-	echo $exercise - "I don't know"
+	echo $exercise - $(readJSON "notYetMarked")
+}
+
+c-test () {
+	# This will test for compliation errors for any c code that fucking moulinette and norminette will pick out
+	# PS I fucking hate moulinette
+
+	local cfiles=$(find $projectDir -name "*.c" -type f)
+
+	# CD MAKES ME SCARED
+	cd $projectDir
+	normOutputLineCount=$(norminette -R CheckForbiddenSourceHeader | wc -l | sed "s/ //g")
+	normOutputOKcount=$(norminette -R CheckForbiddenSourceHeader | grep "OK!" | wc -l | sed "s/ //g")
+
+	if [ "$normOutputOKcount" != "$normOutputLineCount" ]; then
+		norminette -R CheckForbiddenSourceHeader | grep -v "OK!"
+	else 
+		echo $(readJSON "norminetteOK")
+	fi
+	cd $currentDir
+	# CD MAKES ME SCARED
+
+	gccOut=$(gcc -Wall -Wextra -Werror $cfiles)
+
+	if [ "${#gccOut}" == "0" ]; then
+		echo $(readJSON "compileOK")
+		rm "a.out"  # delete a.out since compile is ok
+	else
+		gccOut=$(gcc -Wall -Wextra -Werror $cfiles)
+	fi
+}
+
+c-piscine-c-00 () {
+	local correctPath=".DS_Store/$1"
+	local currentPath=${projectDir///}
+
+	local script=""
+	local exercise=""
+	local commandDiff=""
+	echo ""
+	echo $1 - $(readJSON "notYetMarked")
+	echo ""
+	c-test
 }
 
 main

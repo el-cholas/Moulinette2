@@ -1,4 +1,5 @@
 {
+	"languageName": "Español",
 	"chooseLanguage": "Elija el número correspondiente a su idioma:",
 	"invalidLangSelection": "Selección inválida",
 	"chooseExercise": "Seleccione el ejercicio que desea comprobar:",
@@ -14,5 +15,8 @@
 	"errorLogTitle": "Moulinette2 by el-cholas - Registro de errores",
 	"errorIncorrectHardLinks": "Número incorrecto de Hard Links",
 	"errorIncorrectDate": "La fecha es incorrecta",
-	"createdBy": "Esto fue creado por xcarroll en slack con mucho amor y cafeína"
+	"notYetMarked": "Todavía no he encontrado la manera de marcar este ejercicio",
+	"createdBy": "Esto fue creado por xcarroll en slack con mucho amor y cafeína",
+	"norminetteOK": "Norminette OK!",
+	"compileOK": "Compile OK!"
 }
