@@ -104,13 +104,17 @@ chooseExercise () {
 	# But bash sucks ass a bit with storing variables and returning variable
 
 	# Store all json files into an array
-	local files=($(find ".DS_Store/" -name "c-piscine*" -type d -exec basename {} ";"))
+	local files=("C" $(find ".DS_Store/" -name "c-piscine*" -type d -exec basename {} ";"))
 	local fileIndex=1
 	echo ""
 	# Loop through language files and print them out
 	for languageName in "${files[@]}"
 	do
-		echo $fileIndex $languageName
+		if [ "$fileIndex" == "1" ]; then
+			echo $fileIndex $languageName $(readJSON "testAnyC")
+		else
+			echo $fileIndex $languageName
+		fi
 		fileIndex=$(($fileIndex + 1))
 	done
 
@@ -478,7 +482,7 @@ c-piscine-shell-01-mac () {
 	echo $exercise - $(readJSON "notYetMarked")
 }
 
-c-test () {
+C () {
 	# This will test for compliation errors for any c code that fucking moulinette and norminette will pick out
 	# PS I fucking hate moulinette
 
@@ -516,8 +520,9 @@ c-piscine-c-00 () {
 	local commandDiff=""
 	echo ""
 	echo $1 - $(readJSON "notYetMarked")
+	echo $(readJSON "executing") - $(readJSON "testAnyC")
 	echo ""
-	c-test
+	C
 }
 
 main

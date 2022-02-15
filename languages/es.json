@@ -18,5 +18,7 @@
 	"notYetMarked": "Todavía no he encontrado la manera de marcar este ejercicio",
 	"createdBy": "Esto fue creado por xcarroll en slack con mucho amor y cafeína",
 	"norminetteOK": "Norminette OK!",
-	"compileOK": "Compile OK!"
+	"compileOK": "Compila OK!",
+	"testAnyC": "Compruebe cualquier código C",
+	"executing": "Ejecutando"
 }

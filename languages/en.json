@@ -18,5 +18,7 @@
 	"notYetMarked": "I haven't yet found a way to mark this exercise",
 	"createdBy": "This was made by xcarroll on slack with lots of love and caffeine",
 	"norminetteOK": "Code passes norminette!",
-	"compileOK": "The code compiles correctly!"
+	"compileOK": "The code compiles correctly!",
+	"testAnyC": "Check any C code",
+	"executing": "Executing"
 }
