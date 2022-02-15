@@ -492,7 +492,7 @@ C () {
 	cd $projectDir
 	normOutputLineCount=$(norminette -R CheckForbiddenSourceHeader | wc -l | sed "s/ //g")
 	normOutputOKcount=$(norminette -R CheckForbiddenSourceHeader | grep "OK!" | wc -l | sed "s/ //g")
-
+	echo ""
 	if [ "$normOutputOKcount" != "$normOutputLineCount" ]; then
 		norminette -R CheckForbiddenSourceHeader | grep -v "OK!"
 	else 
@@ -521,7 +521,6 @@ c-piscine-c-00 () {
 	echo ""
 	echo $1 - $(readJSON "notYetMarked")
 	echo $(readJSON "executing") - $(readJSON "testAnyC")
-	echo ""
 	C
 }
 
@@ -535,7 +534,6 @@ c-piscine-c-01 () {
 	echo ""
 	echo $1 - $(readJSON "notYetMarked")
 	echo $(readJSON "executing") - $(readJSON "testAnyC")
-	echo ""
 	C
 }
 
