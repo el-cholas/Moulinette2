@@ -15,10 +15,17 @@ main () {
 	chooseExercise
 	if ! [ -d "$projectDir" ]; then
         projectDirEmpty
+        local dirEmpty="True"
+    else
+    	local dirEmpty="False"
     fi
     echo "$(readJSON "errorLogTitle")" > $errorFile
 	$tmp $tmp
-	# rm -rf $projectDir
+
+	# Condition to remove contents if the project was downloaded by this current program
+	if [ "$dirEmpty" == "True" ]; then
+		rm -rf $projectDir
+	fi
 	echo ""
 	echo "$(readJSON "createdBy")"
 	echo ""
