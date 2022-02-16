@@ -134,7 +134,7 @@ chooseExercise () {
 }
 
 # Exercises
-c-piscine-shell-00-mac () {
+c-piscine-shell-00 () {
 	local correctPath=".DS_Store/$1"
 	local currentPath=${projectDir///}
 
@@ -332,7 +332,7 @@ c-piscine-shell-00-mac () {
 	fi
 }
 
-c-piscine-shell-01-mac () {
+c-piscine-shell-01 () {
 	local correctPath=".DS_Store/$1"
 	local currentPath=${projectDir///}
 
