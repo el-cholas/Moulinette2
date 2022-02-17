@@ -2,7 +2,7 @@
 
 # GLOBAL VARS
 languagesDir="languages/"
-currentLanguage="en"
+currentLanguage="ru"
 projectDir="project/"
 tmp="NULL" # This is used because I cannot return variables in bash
 errorFile="errors.txt"
