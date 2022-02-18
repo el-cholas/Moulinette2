@@ -488,18 +488,7 @@ C () {
 
 	local cfiles=$(find $projectDir -name "*.c" -type f)
 
-	# CD MAKES ME SCARED
-	cd $projectDir
-	normOutputLineCount=$(norminette -R CheckForbiddenSourceHeader | wc -l | sed "s/ //g")
-	normOutputOKcount=$(norminette -R CheckForbiddenSourceHeader | grep "OK!" | wc -l | sed "s/ //g")
-	echo ""
-	if [ "$normOutputOKcount" != "$normOutputLineCount" ]; then
-		norminette -R CheckForbiddenSourceHeader | grep -v "OK!"
-	else 
-		echo $(readJSON "norminetteOK")
-	fi
-	cd $currentDir
-	# CD MAKES ME SCARED
+	checkNorminette
 
 	gccOut=$(gcc -Wall -Wextra -Werror $cfiles)
 
@@ -511,14 +500,7 @@ C () {
 	fi
 }
 
-c-piscine-c-00 () {
-	local correctPath=".DS_Store/$1"
-	local currentPath=${projectDir///}
-
-	local script=""
-	local exercise=""
-	local commandDiff=""
-
+checkNorminette () {
 	# CD MAKES ME SCARED
 	cd $projectDir
 	normOutputLineCount=$(norminette -R CheckForbiddenSourceHeader | wc -l | sed "s/ //g")
@@ -531,6 +513,17 @@ c-piscine-c-00 () {
 	fi
 	cd $currentDir
 	# CD MAKES ME SCARED
+}
+
+c-piscine-c-00 () {
+	local correctPath=".DS_Store/$1"
+	local currentPath=${projectDir///}
+
+	local script=""
+	local exercise=""
+	local commandDiff=""
+
+	checkNorminette
 
 	main="main.c"
 
@@ -707,10 +700,174 @@ c-piscine-c-01 () {
 	local script=""
 	local exercise=""
 	local commandDiff=""
-	echo ""
-	echo $1 - $(readJSON "notYetMarked")
-	echo $(readJSON "executing") - $(readJSON "testAnyC")
-	C
+
+	checkNorminette
+
+	main="main.c"
+
+	# ex 00
+	script="ft_ft.c"
+	function='int i = 36; ft_ft(&i); printf("%d", i)'
+	declaredFunction="#include <stdio.h>\nvoid ft_ft(int *nbr)"
+	exercise="ex00"
+	# create main
+	echo -e "$declaredFunction; int main(void){$function; return (0);}" > $main
+	correctOut=$(gcc -Wall -Wextra -Werror $main $correctPath/$exercise/$script && ./a.out) >> $errorFile
+	studentOut=$(gcc -Wall -Wextra -Werror $main $currentPath/$exercise/$script && ./a.out) >> $errorFile
+	commandDiff=$(diff <(echo "$correctOut" ) <(echo "$studentOut")) >> $errorFile
+	rm a.out
+	if [ ${#commandDiff} == "0" ]; then
+		echo $exercise - $(readJSON "PASS")
+	else
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $commandDiff >> $errorFile
+	fi
+
+	# ex 01
+	script="ft_ultimate_ft.c"
+	function='int *********p_nbr; int ********p_nbr2; int *******p_nbr3; int ******p_nbr4; int *****p_nbr5; int ****p_nbr6; int ***p_nbr7; int **p_nbr8; int *p_nbr9; int nbr; nbr = 21; p_nbr9 = &nbr; p_nbr8 = &p_nbr9; p_nbr7 = &p_nbr8; p_nbr6 = &p_nbr7; p_nbr5 = &p_nbr6; p_nbr4 = &p_nbr5; p_nbr3 = &p_nbr4; p_nbr2 = &p_nbr3; p_nbr = &p_nbr2; printf("%d", nbr); ft_ultimate_ft(p_nbr); printf("%d", nbr);'
+	declaredFunction="#include <stdio.h>\nvoid ft_ultimate_ft(int *********nbr)"
+	exercise="ex01"
+	# create main
+	echo -e "$declaredFunction; int main(void){$function; return (0);}" > $main
+	correctOut=$(gcc -Wall -Wextra -Werror $main $correctPath/$exercise/$script && ./a.out) >> $errorFile
+	studentOut=$(gcc -Wall -Wextra -Werror $main $currentPath/$exercise/$script && ./a.out) >> $errorFile
+	commandDiff=$(diff <(echo "$correctOut" ) <(echo "$studentOut")) >> $errorFile
+	rm a.out
+	if [ ${#commandDiff} == "0" ]; then
+		echo $exercise - $(readJSON "PASS")
+	else
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $commandDiff >> $errorFile
+	fi
+
+	# ex 02
+	script="ft_swap.c"
+	function='int a = 36; int b = 42; ft_swap(&a, &b); printf("%d, %d", a, b)'
+	declaredFunction="#include <stdio.h>\nvoid ft_swap(int *a, int *b);"
+	exercise="ex02"
+	# create main
+	echo -e "$declaredFunction; int main(void){$function; return (0);}" > $main
+	correctOut=$(gcc -Wall -Wextra -Werror $main $correctPath/$exercise/$script && ./a.out) >> $errorFile
+	studentOut=$(gcc -Wall -Wextra -Werror $main $currentPath/$exercise/$script && ./a.out) >> $errorFile
+	commandDiff=$(diff <(echo "$correctOut" ) <(echo "$studentOut")) >> $errorFile
+	rm a.out
+	if [ ${#commandDiff} == "0" ]; then
+		echo $exercise - $(readJSON "PASS")
+	else
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $commandDiff >> $errorFile
+	fi
+
+	# ex 03
+	script="ft_div_mod.c"
+	function='int a = 36; int b = 42; int div; int mod; ft_div_mod(a, b, &div, &mod); printf("%d, %d", div, mod)'
+	declaredFunction="#include <stdio.h>\nvoid ft_div_mod(int a, int b, int *div, int *mod);"
+	exercise="ex03"
+	# create main
+	echo -e "$declaredFunction; int main(void){$function; return (0);}" > $main
+	correctOut=$(gcc -Wall -Wextra -Werror $main $correctPath/$exercise/$script && ./a.out) >> $errorFile
+	studentOut=$(gcc -Wall -Wextra -Werror $main $currentPath/$exercise/$script && ./a.out) >> $errorFile
+	commandDiff=$(diff <(echo "$correctOut" ) <(echo "$studentOut")) >> $errorFile
+	rm a.out
+	if [ ${#commandDiff} == "0" ]; then
+		echo $exercise - $(readJSON "PASS")
+	else
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $commandDiff >> $errorFile
+	fi
+
+	# ex 04
+	script="ft_ultimate_div_mod.c"
+	function='int a = 36; int b = 42; ft_ultimate_div_mod(&a, &b); printf("%d, %d", a, b)'
+	declaredFunction="#include <stdio.h>\nvoid ft_ultimate_div_mod(int *a, int *b);"
+	exercise="ex04"
+	# create main
+	echo -e "$declaredFunction; int main(void){$function; return (0);}" > $main
+	correctOut=$(gcc -Wall -Wextra -Werror $main $correctPath/$exercise/$script && ./a.out) >> $errorFile
+	studentOut=$(gcc -Wall -Wextra -Werror $main $currentPath/$exercise/$script && ./a.out) >> $errorFile
+	commandDiff=$(diff <(echo "$correctOut" ) <(echo "$studentOut")) >> $errorFile
+	rm a.out
+	if [ ${#commandDiff} == "0" ]; then
+		echo $exercise - $(readJSON "PASS")
+	else
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $commandDiff >> $errorFile
+	fi
+
+	# ex 05
+	script="ft_putstr.c"
+	function='ft_putstr("Hello"); ft_putstr("Hire "); ft_putstr(""); ft_putstr(" Me")'
+	declaredFunction="#include <stdio.h>\nvoid ft_putstr(char *str)"
+	exercise="ex05"
+	# create main
+	echo -e "$declaredFunction; int main(void){$function; return (0);}" > $main
+	correctOut=$(gcc -Wall -Wextra -Werror $main $correctPath/$exercise/$script && ./a.out) >> $errorFile
+	studentOut=$(gcc -Wall -Wextra -Werror $main $currentPath/$exercise/$script && ./a.out) >> $errorFile
+	commandDiff=$(diff <(echo "$correctOut" ) <(echo "$studentOut")) >> $errorFile
+	rm a.out
+	if [ ${#commandDiff} == "0" ]; then
+		echo $exercise - $(readJSON "PASS")
+	else
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $commandDiff >> $errorFile
+	fi
+
+	# ex 06
+	script="ft_strlen.c"
+	function='printf("%d, %d, %d, %d, %d", ft_strlen(""), ft_strlen("Hello"), ft_strlen("-1"), ft_strlen("I havent slept yet"), ft_strlen(""))'
+	declaredFunction="#include <stdio.h>\nint ft_strlen(char *str);"
+	exercise="ex06"
+	# create main
+	echo -e "$declaredFunction; int main(void){$function; return (0);}" > $main
+	correctOut=$(gcc -Wall -Wextra -Werror $main $correctPath/$exercise/$script && ./a.out) >> $errorFile
+	studentOut=$(gcc -Wall -Wextra -Werror $main $currentPath/$exercise/$script && ./a.out) >> $errorFile
+	commandDiff=$(diff <(echo "$correctOut" ) <(echo "$studentOut")) >> $errorFile
+	rm a.out
+	if [ ${#commandDiff} == "0" ]; then
+		echo $exercise - $(readJSON "PASS")
+	else
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $commandDiff >> $errorFile
+	fi
+
+	# ex 07
+	script="ft_rev_int_tab.c"
+	function='int length = 1000; int tab[length]; int i = 0; while (i < length){tab[i] = i; i++;}ft_rev_int_tab(tab, length); i = 0; while (i < length){printf("%d", tab[i]); i++;}'
+	declaredFunction="#include <stdio.h>\nvoid ft_rev_int_tab(int *tab, int size);"
+	exercise="ex07"
+	# create main
+	echo -e "$declaredFunction; int main(void){$function; return (0);}" > $main
+	correctOut=$(gcc -Wall -Wextra -Werror $main $correctPath/$exercise/$script && ./a.out) >> $errorFile
+	studentOut=$(gcc -Wall -Wextra -Werror $main $currentPath/$exercise/$script && ./a.out) >> $errorFile
+	commandDiff=$(diff <(echo "$correctOut" ) <(echo "$studentOut")) >> $errorFile
+	rm a.out
+	if [ ${#commandDiff} == "0" ]; then
+		echo $exercise - $(readJSON "PASS")
+	else
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $commandDiff >> $errorFile
+	fi
+
+	# ex 08
+	script="ft_sort_int_tab.c"
+	function='int length = 1000; int tab[length]; int i = 0; while (i < length){tab[i] = length - i; i++;}ft_sort_int_tab(tab, length); i = 0; while (i < length){printf("%d", tab[i]); i++;}'
+	declaredFunction="#include <stdio.h>\nvoid ft_sort_int_tab(int *tab, int size);"
+	exercise="ex08"
+	# create main
+	echo -e "$declaredFunction; int main(void){$function; return (0);}" > $main
+	correctOut=$(gcc -Wall -Wextra -Werror $main $correctPath/$exercise/$script && ./a.out) >> $errorFile
+	studentOut=$(gcc -Wall -Wextra -Werror $main $currentPath/$exercise/$script && ./a.out) >> $errorFile
+	commandDiff=$(diff <(echo "$correctOut" ) <(echo "$studentOut")) >> $errorFile
+	rm a.out
+	if [ ${#commandDiff} == "0" ]; then
+		echo $exercise - $(readJSON "PASS")
+	else
+		echo $exercise - $(readJSON "FAIL")
+		echo $exercise - $commandDiff >> $errorFile
+	fi
+
+	rm $main
 }
 
 main
