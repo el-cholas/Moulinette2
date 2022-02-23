@@ -532,6 +532,7 @@ C-executer () {
 	local currentPath=$6
 	
 	# create main
+	# If you get an error where new lines aren't printed, change the below echo to printf as it is far more reliable
 	echo -e "$declaredFunction;\nint main(void)\n{\n\t$function;\n\treturn (0);\n}" > $main
 	correctOut=$(gcc -Wall -Wextra -Werror $main $correctPath/$exercise/$script && ./a.out) >> $errorFile
 	studentOut=$(gcc -Wall -Wextra -Werror $main $currentPath/$exercise/$script && ./a.out) >> $errorFile
@@ -544,7 +545,7 @@ C-executer () {
 		echo $exercise - $commandDiff >> $errorFile
 	fi
 
-	rm $main
+	#rm $main
 
 }
 
@@ -554,7 +555,6 @@ c-piscine-c-00 () {
 
 	local script=""
 	local exercise=""
-	local commandDiff=""
 
 	checkNorminette
 
@@ -628,7 +628,6 @@ c-piscine-c-01 () {
 
 	local script=""
 	local exercise=""
-	local commandDiff=""
 
 	checkNorminette
 
@@ -694,6 +693,114 @@ c-piscine-c-01 () {
 	declaredFunction="#include <stdio.h>\nvoid ft_sort_int_tab(int *tab, int size);"
 	exercise="ex08"
 	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+}
+
+c-piscine-c-02 () {
+	local correctPath=".DS_Store/$1"
+	local currentPath=${projectDir///}
+
+	local script=""
+	local exercise=""
+
+	local testWeirdString="char str1[] = {0x42, 0x6f, 0x6e, 0x6a, 0x6f, 0x75, 0x72, 0x20, 0x6c, 0x65, 0x73, 0x20, 0x61, 0x6d, 0x69, 0x6e, 0x63, 0x68, 0x65, 0x73, 0x09, 0x0a, 0x09, 0x63, 0x20, 0x20, 0x65, 0x73, 0x74, 0x20, 0x66, 0x6f, 0x75, 0x09, 0x74, 0x6f, 0x75, 0x74, 0x09, 0x63, 0x65, 0x20, 0x71, 0x75, 0x20, 0x6f, 0x6e, 0x20, 0x70, 0x65, 0x75, 0x74, 0x20, 0x66, 0x61, 0x69, 0x72, 0x65, 0x20, 0x61, 0x76, 0x65, 0x63, 0x09, 0x0a, 0x09, 0x70, 0x72, 0x69, 0x6e, 0x74, 0x5f, 0x6d, 0x65, 0x6d, 0x6f, 0x72, 0x79, 0x0a, 0x0a, 0x0a, 0x09, 0x6c, 0x6f, 0x6c, 0x2e, 0x6c, 0x6f, 0x6c, 0x0a, 0x20, 0x00};\n"
+
+	checkNorminette
+
+	# ex 00
+	script="ft_strcpy.c"
+	function=$testWeirdString'char dest[] = "";\nchar src[] = "Hello";\nprintf("%s, %s", src, dest);\nft_strcpy(dest, src);\nprintf("%s, %s", src, dest);\nft_strcpy(dest, str1);\nprintf("%s, %s", str1, dest);'
+	declaredFunction="#include <stdio.h>\nchar *ft_strcpy(char *dest, char *src)"
+	exercise="ex00"
+	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+
+	# ex 01
+	script="ft_strcpy.c"
+	function=$testWeirdString'char dest[] = "";\nchar src[] = "Hello";\nprintf("%s, %s", src, dest);\nft_strncpy(dest, src, 0);\nprintf("%s, %s", src, dest);\nft_strncpy(dest, str1, 10);\nprintf("%s, %s", str1, dest);'
+	declaredFunction="#include <stdio.h>\nchar *ft_strncpy(char *dest, char *src, unsigned int n);"
+	exercise="ex01"
+	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+	echo $exercise - $(readJSON "notYetMarked")
+
+	# ex 02
+	script="ft_str_is_alpha.c"
+	function=$testWeirdString'printf("%d, %d, %d, %d, %d", ft_str_is_alpha(""), ft_str_is_alpha("abc"), ft_str_is_alpha("ABC"), ft_str_is_alpha("123"), ft_str_is_alpha(str1));'
+	declaredFunction="#include <stdio.h>\nint ft_str_is_alpha(char *str);"
+	exercise="ex02"
+	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+
+	# ex 03
+	script="ft_str_is_numeric.c"
+	function=$testWeirdString'printf("%d, %d, %d, %d, %d", ft_str_is_numeric(""), ft_str_is_numeric("abc"), ft_str_is_numeric("ABC"), ft_str_is_numeric("123"), ft_str_is_numeric(str1))'
+	declaredFunction="#include <stdio.h>\nint ft_str_is_numeric(char *str);"
+	exercise="ex03"
+	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+
+	# ex 04
+	script="ft_str_is_lowercase.c"
+	function=$testWeirdString'printf("%d, %d, %d, %d, %d", ft_str_is_lowercase(""), ft_str_is_lowercase("abc"), ft_str_is_lowercase("ABC"), ft_str_is_lowercase("123"), ft_str_is_lowercase(str1))'
+	declaredFunction="#include <stdio.h>\nint ft_str_is_lowercase(char *str);"
+	exercise="ex04"
+	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+
+	# ex 05
+	script="ft_str_is_uppercase.c"
+	function=$testWeirdString'printf("%d, %d, %d, %d, %d", ft_str_is_uppercase(""), ft_str_is_uppercase("abc"), ft_str_is_uppercase("ABC"), ft_str_is_uppercase("123"), ft_str_is_uppercase(str1))'
+	declaredFunction="#include <stdio.h>\nint ft_str_is_uppercase(char *str);"
+	exercise="ex05"
+	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+
+	# ex 06
+	script="ft_str_is_printable.c"
+	function=$testWeirdString'printf("%d, %d, %d, %d, %d", ft_str_is_printable(""), ft_str_is_printable("abc"), ft_str_is_printable("ABC"), ft_str_is_printable("123"), ft_str_is_printable(str1))'
+	declaredFunction="#include <stdio.h>\nint ft_str_is_printable(char *str);"
+	exercise="ex06"
+	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+
+	# ex 07
+	script="ft_strupcase.c"
+	function=$testWeirdString'printf("%s, %s, %s, %s, %s", ft_strupcase(""), ft_strupcase("abc"), ft_strupcase("ABC"), ft_strupcase("123"), ft_strupcase(str1))'
+	declaredFunction="#include <stdio.h>\nchar *ft_strupcase(char *str);"
+	exercise="ex07"
+	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+
+	# ex 08
+	script="ft_strlowcase.c"
+	function=$testWeirdString'printf("%s, %s, %s, %s, %s", ft_strlowcase(""), ft_strlowcase("abc"), ft_strlowcase("ABC"), ft_strlowcase("123"), ft_strlowcase(str1))'
+	declaredFunction="#include <stdio.h>\nchar *ft_strlowcase(char *str);"
+	exercise="ex08"
+	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+
+	# ex 09
+	script="ft_strcapitalize.c"
+	function=$testWeirdString'printf("%s, %s, %s, %s, %s", ft_strcapitalize(""), ft_strcapitalize("salut, comment tu vas ? 42mots quarante-deux; cinquante+et+un"), ft_strcapitalize("ABC"), ft_strcapitalize("123"), ft_strcapitalize(str1))'
+	declaredFunction="#include <stdio.h>\nchar *ft_strcapitalize(char *str);"
+	exercise="ex09"
+	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+	echo $exercise - $(readJSON "notYetMarked")
+
+	# ex 10
+	script="ft_strlcpy.c"
+	function=$testWeirdString'printf("%u, %u, %u, %u, %u", ft_strlcpy(""), ft_strlcpy("abc"), ft_strlcpy("ABC"), ft_strlcpy("123"), ft_strlcpy(str1))'
+	declaredFunction="#include <stdio.h>\nunsigned int ft_strlcpy(char *dest, char *src, unsigned int size);"
+	exercise="ex10"
+	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+	echo $exercise - $(readJSON "notYetMarked")
+
+	# ex 11
+	script="ft_putstr_non_printable.c"
+	function=$testWeirdString'ft_strlcpy("");\nft_strlcpy("abc");\nft_strlcpy("ABC");\nft_strlcpy("123");\nft_strlcpy(str1);\n'
+	declaredFunction="#include <stdio.h>\nvoid ft_putstr_non_printable(char *str);"
+	exercise="ex11"
+	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+	echo $exercise - $(readJSON "notYetMarked")
+
+	# ex 12
+	script="ft_print_memory.c"
+	function=$testWeirdString'ft_print_memory((void *)&str1, 8);\nft_print_memory((void *)&str1, 16);\nft_print_memory((void *)&str1, 0);\n'
+	declaredFunction="#include <stdio.h>\nvoid	*ft_print_memory(void *addr, unsigned int size);"
+	exercise="ex12"
+	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+	echo $exercise - $(readJSON "notYetMarked")
 }
 
 main
