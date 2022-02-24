@@ -20,7 +20,7 @@ langFile=$languagesDir$currentLanguage.json
 
 
 main () {
-	git pull
+	git pull &>/dev/null
 
 	# Setup defaults
 	if [ -f "$userPreferencesFile" ]; then
@@ -88,7 +88,6 @@ chooseLanguage () {
 	# Store all json files into an array
 	local files=($(find $languagesDir -name "*.json" -type f -exec basename {} .json ";"))
 	local fileIndex=1
-	echo ""
 
 	# Set the tmp variable as the current language so I can reset it after
 	tmp=$langFile
@@ -126,7 +125,6 @@ chooseExercise () {
 	# Store all json files into an array
 	local files=("C" $(find ".DS_Store/" -name "c-piscine*" -type d -exec basename {} ";"))
 	local fileIndex=1
-	echo ""
 	# Loop through language files and print them out
 	for languageName in "${files[@]}"
 	do
