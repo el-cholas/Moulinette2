@@ -2,21 +2,35 @@
 
 # GLOBAL VARS
 languagesDir="languages/"
-currentLanguage="ru"
 projectDir="project/"
 tmp="NULL" # This is used because I cannot return variables in bash
 errorFile="errors.txt"
+userPreferencesFile="preferences.json"
 currentDir=$(pwd)
 
-# text colouring
+# Text colouring
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
+# Defaults, these will be overwritten if in user preferences file
+currentLanguage="ru"
+showMains="False"  # This saves the main files generated if True
+langFile=$languagesDir$currentLanguage.json
+
 
 main () {
-	# git pull
-	chooseLanguage
+	git pull
+
+	# Setup defaults
+	if [ -f "$userPreferencesFile" ]; then
+		currentLanguage=$(readJSON "language" $userPreferencesFile)
+		showMains=$(readJSON "showMains" $userPreferencesFile)
+	else
+        createDefaults
+    fi
+    langFile=$languagesDir$currentLanguage.json
+
 	chooseExercise
 	if ! [ -d "$projectDir" ]; then
         projectDirEmpty
@@ -31,9 +45,13 @@ main () {
 	if [ "$dirEmpty" == "True" ]; then
 		rm -rf $projectDir
 	fi
-	echo ""
-	echo "$(readJSON "createdBy")"
-	echo ""
+	echo -e "\n$(readJSON "createdBy")\n"
+}
+
+createDefaults () {
+	chooseLanguage
+	echo -e '{\n\t"language": "'$currentLanguage'",' > $userPreferencesFile
+	echo -e '\t"showMains": "'$showMains'"\n}' >> $userPreferencesFile
 }
 
 projectDirEmpty () {
@@ -50,17 +68,14 @@ projectDirEmpty () {
 }
 
 readJSON () {
-	# Usage is " $(readJSON "key") "
+	# Usage is ' $(readJSON "key" "path.json") '
+	cd $currentDir
 	local fieldName=$1
 
-	# $2 is a very buggy variable to use, I don't use it
-
-	# If $2 is an empty variable, set it as the default language
-	if [ -z "$2" ]
-	then
-    	filename="$currentDir/$languagesDir$currentLanguage.json"
+	if [ ${#2} == "0" ]; then
+		local filename=$langFile
 	else
-		filename="$currentDir/$languagesDir$2.json"
+		local filename=$2
 	fi
 	grep -o '"'$fieldName'": "[^"]*' $filename | grep -o '[^"]*$'
 }
@@ -76,18 +91,18 @@ chooseLanguage () {
 	echo ""
 
 	# Set the tmp variable as the current language so I can reset it after
-	tmp=$currentLanguage
+	tmp=$langFile
 
 	# Loop through language files and print them out
 	for languageName in "${files[@]}"
 	do
-		currentLanguage=$languageName
+		langFile=$languagesDir$languageName.json
 		echo $fileIndex $(readJSON languageName)
 		fileIndex=$(($fileIndex + 1))
 	done
 
 	# Reset the current language var
-	currentLanguage=$tmp
+	langFile=$tmp
 	# Ask user for language selection
 	echo -n "$(readJSON chooseLanguage) "
 	read languageIndex
@@ -538,14 +553,16 @@ C-executer () {
 	local exercise=$4
 	local correctPath=$5
 	local currentPath=$6
-	local main="$mainDir/main-$exercise.c"
-	local bashCommand="./a.out"
 	local compileError=""
 	local commandDiff=""
+	local main="main.c"
 
 	# check if main dir exists
-	if ! [ -d "$mainDir" ]; then
-        mkdir $mainDir
+	if [ "$showMains" == "True" ]; then
+		if ! [ -d "$mainDir" ]; then
+        	mkdir $mainDir
+       	fi
+        main="$mainDir/main-$exercise.c"
     fi
 	
 	# create main
@@ -592,6 +609,11 @@ C-executer () {
 			echo -e "compile $(readJSON "FAIL") :(\n$compileError" >> $errorFile
 		fi
 	fi
+
+	# check if main dir exists
+	if [ "$showMains" != "True" ]; then
+        rm $main
+    fi
 }
 
 c-piscine-c-00 () {
@@ -840,6 +862,7 @@ c-piscine-c-02 () {
 	function=$testWeirdString'ft_print_memory((void *)&str1, 8);\nft_print_memory((void *)&str1, 16);\nft_print_memory((void *)&str1, 0);\n'
 	declaredFunction="#include <stdio.h>\nvoid	*ft_print_memory(void *addr, unsigned int size);"
 	exercise="ex12"
+	# Compares everything but first column
 	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath" ":" "2-"
 }
 
