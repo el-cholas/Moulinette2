@@ -8,9 +8,14 @@ tmp="NULL" # This is used because I cannot return variables in bash
 errorFile="errors.txt"
 currentDir=$(pwd)
 
+# text colouring
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
 
 main () {
-	git pull
+	# git pull
 	chooseLanguage
 	chooseExercise
 	if ! [ -d "$projectDir" ]; then
@@ -19,7 +24,7 @@ main () {
     else
     	local dirEmpty="False"
     fi
-    echo "$(readJSON "errorLogTitle")" > $errorFile
+    echo -e "$(readJSON "errorLogTitle")" > $errorFile
 	$tmp $tmp
 
 	# Condition to remove contents if the project was downloaded by this current program
@@ -503,8 +508,8 @@ C () {
 checkNorminette () {
 	# CD MAKES ME SCARED
 	cd $projectDir
-	normOutputLineCount=$(norminette -R CheckForbiddenSourceHeader | wc -l | sed "s/ //g")
-	normOutputOKcount=$(norminette -R CheckForbiddenSourceHeader | grep "OK!" | wc -l | sed "s/ //g")
+	local normOutputLineCount=$(norminette -R CheckForbiddenSourceHeader | wc -l | sed "s/ //g")
+	local normOutputOKcount=$(norminette -R CheckForbiddenSourceHeader | grep "OK!" | wc -l | sed "s/ //g")
 	echo ""
 	if [ "$normOutputOKcount" != "$normOutputLineCount" ]; then
 		norminette -R CheckForbiddenSourceHeader | grep -v "OK!"
@@ -517,36 +522,76 @@ checkNorminette () {
 
 C-executer () {
 	# Usage
-	# C-executer "script file name" "function" "declaredFunction" "exercise"
+	# C-executer "script file name" "function" "declaredFunction" "exercise" "correctDir" "uploadedDir"
 	# Example usage
-	# C-executer "ft_putchar.c" "ft_putchar('C')" "void ft_putchar(char c)" "ex00"
+	# C-executer "ft_putchar.c" "ft_putchar('C')" "void ft_putchar(char c)" "ex00" "correctDir" "uploadedDir"
+	#
+	# Other Usage (this is specific to C02 ex12 where different runs will have different outputs)
+	# The last 2 optional variables will be a cut command where the d is $7 and f is $8
 	#
 	# I only created this function after c02 because I am a dumbass and forgot that I can put ""
 	# around inputted variables to seperate them.
-	local main="main.c"
+	local mainDir="mains"
 	local script=$1
 	local function=$2
 	local declaredFunction=$3
 	local exercise=$4
 	local correctPath=$5
 	local currentPath=$6
+	local main="$mainDir/main-$exercise.c"
+	local bashCommand="./a.out"
+	local compileError=""
+	local commandDiff=""
+
+	# check if main dir exists
+	if ! [ -d "$mainDir" ]; then
+        mkdir $mainDir
+    fi
 	
 	# create main
 	# If you get an error where new lines aren't printed, change the below echo to printf as it is far more reliable
 	echo -e "$declaredFunction;\nint main(void)\n{\n\t$function;\n\treturn (0);\n}" > $main
-	correctOut=$(gcc -Wall -Wextra -Werror $main $correctPath/$exercise/$script && ./a.out) >> $errorFile
-	studentOut=$(gcc -Wall -Wextra -Werror $main $currentPath/$exercise/$script && ./a.out) >> $errorFile
-	commandDiff=$(diff <(echo "$correctOut" ) <(echo "$studentOut")) >> $errorFile
-	rm a.out
-	if [ ${#commandDiff} == "0" ]; then
-		echo $exercise - $(readJSON "PASS")
+
+	gcc -Wall -Wextra -Werror $main $correctPath/$exercise/$script
+
+	# check for $7 and &8
+    if [ ${#7} == "0" ] && [ ${#8} == "0" ]; then
+		local correctOut=$(./a.out)
 	else
-		echo $exercise - $(readJSON "FAIL")
-		echo $exercise - $commandDiff >> $errorFile
+		local correctOut=$(./a.out | cut -d "$7" -f $8)
 	fi
 
-	#rm $main
+	compileError=$(( gcc -Wall -Wextra -Werror $main $currentPath/$exercise/$script ) 2>&1)
+	#local studentOut=$(timeout 1s -c './a.out') - this is to exit if the timer is reached
 
+	# check for $7 and &8
+    if [ ${#7} == "0" ] && [ ${#8} == "0" ]; then
+		local studentOut=$(./a.out)
+	else
+		local studentOut=$(./a.out | cut -d "$7" -f $8)
+	fi
+
+	commandDiff=$(diff <(echo "$correctOut" ) <(echo "$studentOut"))
+	rm a.out
+	# if length is 0
+	if [ ${#commandDiff} == "0" ] && [ ${#compileError} == "0" ]; then
+		# Colours
+		echo -e $exercise - ${GREEN}"$(readJSON "PASS")${NC}"
+	else
+		# Colours
+		echo -e $exercise - ${RED}"$(readJSON "FAIL")${NC}"
+		echo -e "\n$exercise" >> $errorFile
+		if [ ${#commandDiff} == "0" ]; then
+			echo -e "diff $(readJSON "PASS") :D" >> $errorFile
+		else
+			echo -e "diff $(readJSON "FAIL") :(\n$commandDiff" >> $errorFile
+		fi
+		if [ ${#compileError} == "0" ]; then
+			echo -e "compile $(readJSON "PASS") :D" >> $errorFile
+		else
+			echo -e "compile $(readJSON "FAIL") :(\n$compileError" >> $errorFile
+		fi
+	fi
 }
 
 c-piscine-c-00 () {
@@ -714,12 +759,11 @@ c-piscine-c-02 () {
 	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
 
 	# ex 01
-	script="ft_strcpy.c"
+	script="ft_strncpy.c"
 	function=$testWeirdString'char dest[] = "";\nchar src[] = "Hello";\nprintf("%s, %s", src, dest);\nft_strncpy(dest, src, 0);\nprintf("%s, %s", src, dest);\nft_strncpy(dest, str1, 10);\nprintf("%s, %s", str1, dest);'
 	declaredFunction="#include <stdio.h>\nchar *ft_strncpy(char *dest, char *src, unsigned int n);"
 	exercise="ex01"
 	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
-	echo $exercise - $(readJSON "notYetMarked")
 
 	# ex 02
 	script="ft_str_is_alpha.c"
@@ -776,31 +820,27 @@ c-piscine-c-02 () {
 	declaredFunction="#include <stdio.h>\nchar *ft_strcapitalize(char *str);"
 	exercise="ex09"
 	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
-	echo $exercise - $(readJSON "notYetMarked")
 
 	# ex 10
 	script="ft_strlcpy.c"
-	function=$testWeirdString'printf("%u, %u, %u, %u, %u", ft_strlcpy(""), ft_strlcpy("abc"), ft_strlcpy("ABC"), ft_strlcpy("123"), ft_strlcpy(str1))'
+	function=$testWeirdString'char dest[] = "";\nchar src[] = "Hello";\nprintf("%s, %s", src, dest);\nft_strlcpy(dest, src, 6);\nprintf("%s, %s", src, dest);\nft_strlcpy(dest, str1, 92);\nprintf("%s, %s", str1, dest);\nft_strlcpy(dest, src, 5);'
 	declaredFunction="#include <stdio.h>\nunsigned int ft_strlcpy(char *dest, char *src, unsigned int size);"
 	exercise="ex10"
 	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
-	echo $exercise - $(readJSON "notYetMarked")
 
 	# ex 11
 	script="ft_putstr_non_printable.c"
-	function=$testWeirdString'ft_strlcpy("");\nft_strlcpy("abc");\nft_strlcpy("ABC");\nft_strlcpy("123");\nft_strlcpy(str1);\n'
+	function=$testWeirdString'ft_putstr_non_printable("");\nft_putstr_non_printable("abc");\nft_putstr_non_printable("ABC");\nft_putstr_non_printable("123");\nft_putstr_non_printable(str1);\n'
 	declaredFunction="#include <stdio.h>\nvoid ft_putstr_non_printable(char *str);"
 	exercise="ex11"
 	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
-	echo $exercise - $(readJSON "notYetMarked")
 
 	# ex 12
 	script="ft_print_memory.c"
 	function=$testWeirdString'ft_print_memory((void *)&str1, 8);\nft_print_memory((void *)&str1, 16);\nft_print_memory((void *)&str1, 0);\n'
 	declaredFunction="#include <stdio.h>\nvoid	*ft_print_memory(void *addr, unsigned int size);"
 	exercise="ex12"
-	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
-	echo $exercise - $(readJSON "notYetMarked")
+	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath" ":" "2-"
 }
 
 main

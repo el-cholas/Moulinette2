@@ -2,3 +2,5 @@ project/
 errors.txt
 */.DS_Store
 #IGNOREME*
+mains/
+*a.out
