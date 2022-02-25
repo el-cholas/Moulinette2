@@ -70,7 +70,7 @@ void	print_content(char *address, int size, int i)
 	while (address[i] != '\0' && i < size)
 	{
 		print_hex(address[i]);
-		if (i % 2 && i != size - 1)
+		if (i % 2 && i)
 			ft_putchar(' ');
 		i++;
 	}

@@ -11,6 +11,7 @@ currentDir=$(pwd)
 # Text colouring
 RED='\033[0;31m'
 GREEN='\033[0;32m'
+WHITE='\033[0;36m'
 NC='\033[0m' # No Color
 
 # Defaults, these will be overwritten if in user preferences file
@@ -533,6 +534,24 @@ checkNorminette () {
 	# CD MAKES ME SCARED
 }
 
+C-idk () {
+	# Usage
+	# C-idk ex12
+	local exercise=$1
+	local randomInt="$((0 + $RANDOM % 5))"
+	if [ $randomInt == "0" ]; then
+		echo -e $exercise - ${WHITE}"¯\_(ツ)_/¯${NC}"
+	elif [ $randomInt == "1" ]; then
+		echo -e $exercise - ${WHITE}"¯\(º_o)/¯${NC}"
+	elif [ $randomInt == "2" ]; then
+		echo -e $exercise - ${WHITE}"٩◔̯◔۶${NC}"
+	elif [ $randomInt == "3" ]; then
+		echo -e $exercise - ${WHITE}"ب_ب${NC}"
+	elif [ $randomInt == "4" ]; then
+		echo -e $exercise - ${WHITE}"ლ,ᔑ•ﺪ͟͠•ᔐ.ლ${NC}"
+	fi
+}
+
 C-executer () {
 	# Usage
 	# C-executer "script file name" "function" "declaredFunction" "exercise" "correctDir" "uploadedDir"
@@ -832,28 +851,32 @@ c-piscine-c-02 () {
 	function=$testWeirdString'printf("%s, %s, %s, %s, %s", ft_strlowcase(""), ft_strlowcase("abc"), ft_strlowcase("ABC"), ft_strlowcase("123"), ft_strlowcase(str1))'
 	declaredFunction="#include <stdio.h>\nchar *ft_strlowcase(char *str);"
 	exercise="ex08"
-	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+	#C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+	C-idk "$exercise"
 
 	# ex 09
 	script="ft_strcapitalize.c"
 	function=$testWeirdString'printf("%s, %s, %s, %s, %s", ft_strcapitalize(""), ft_strcapitalize("salut, comment tu vas ? 42mots quarante-deux; cinquante+et+un"), ft_strcapitalize("ABC"), ft_strcapitalize("123"), ft_strcapitalize(str1))'
 	declaredFunction="#include <stdio.h>\nchar *ft_strcapitalize(char *str);"
 	exercise="ex09"
-	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+	#C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+	C-idk "$exercise"
 
 	# ex 10
 	script="ft_strlcpy.c"
 	function=$testWeirdString'char dest[] = "";\nchar src[] = "Hello";\nprintf("%s, %s", src, dest);\nft_strlcpy(dest, src, 6);\nprintf("%s, %s", src, dest);\nft_strlcpy(dest, str1, 92);\nprintf("%s, %s", str1, dest);\nft_strlcpy(dest, src, 5);'
 	declaredFunction="#include <stdio.h>\nunsigned int ft_strlcpy(char *dest, char *src, unsigned int size);"
 	exercise="ex10"
-	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+	#C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+	C-idk "$exercise"
 
 	# ex 11
 	script="ft_putstr_non_printable.c"
 	function=$testWeirdString'ft_putstr_non_printable("");\nft_putstr_non_printable("abc");\nft_putstr_non_printable("ABC");\nft_putstr_non_printable("123");\nft_putstr_non_printable(str1);\n'
 	declaredFunction="#include <stdio.h>\nvoid ft_putstr_non_printable(char *str);"
 	exercise="ex11"
-	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+	#C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+	C-idk "$exercise"
 
 	# ex 12
 	script="ft_print_memory.c"
@@ -862,6 +885,7 @@ c-piscine-c-02 () {
 	exercise="ex12"
 	# Compares everything but first column
 	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath" ":" "2-"
+	#C-idk "$exercise"
 }
 
 main
