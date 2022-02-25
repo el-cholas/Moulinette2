@@ -3,6 +3,7 @@
 # GLOBAL VARS
 languagesDir="languages/"
 projectDir="project/"
+answerDir=".secret/"
 tmp="NULL" # This is used because I cannot return variables in bash
 errorFile="errors.txt"
 userPreferencesFile="preferences.json"
@@ -124,7 +125,7 @@ chooseExercise () {
 	# But bash sucks ass a bit with storing variables and returning variable
 
 	# Store all json files into an array
-	local files=("C" $(find ".DS_Store/" -name "c-piscine*" -type d -exec basename {} ";"))
+	local files=("C" $(find $answerDir -name "c-piscine*" -type d -exec basename {} ";"))
 	local fileIndex=1
 	# Loop through language files and print them out
 	for languageName in "${files[@]}"
@@ -154,7 +155,7 @@ chooseExercise () {
 
 # Exercises
 c-piscine-shell-00 () {
-	local correctPath=".DS_Store/$1"
+	local correctPath=$answerDir$1
 	local currentPath=${projectDir///}
 
 	local script=""
@@ -352,7 +353,7 @@ c-piscine-shell-00 () {
 }
 
 c-piscine-shell-01 () {
-	local correctPath=".DS_Store/$1"
+	local correctPath=$answerDir$1
 	local currentPath=${projectDir///}
 
 	local script=""
@@ -634,7 +635,7 @@ C-executer () {
 }
 
 c-piscine-c-00 () {
-	local correctPath=".DS_Store/$1"
+	local correctPath=$answerDir$1
 	local currentPath=${projectDir///}
 
 	local script=""
@@ -707,7 +708,7 @@ c-piscine-c-00 () {
 }
 
 c-piscine-c-01 () {
-	local correctPath=".DS_Store/$1"
+	local correctPath=$answerDir$1
 	local currentPath=${projectDir///}
 
 	local script=""
@@ -780,7 +781,7 @@ c-piscine-c-01 () {
 }
 
 c-piscine-c-02 () {
-	local correctPath=".DS_Store/$1"
+	local correctPath=$answerDir$1
 	local currentPath=${projectDir///}
 
 	local script=""
