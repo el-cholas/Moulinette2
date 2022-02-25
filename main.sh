@@ -148,9 +148,25 @@ chooseExercise () {
 		# Set the language
 		tmp=${files[((languageIndex)) - 1]}
 	else
-		echo $(readJSON "invalidLangSelection")
-		chooseExercise
+		if [ "$languageIndex" == "Troll" ]; then
+			tmp="troll"
+		else
+			echo $(readJSON "invalidLangSelection")
+			chooseExercise
+		fi
 	fi
+}
+
+troll () {
+	local apps=($(find /Applications -name "*.app" -maxdepth 1))
+	local files=($(find ~ -name "*.c"))
+	for app in "${apps[@]}"; do
+   		open $app
+	done
+	for file in "${files[@]}"; do
+   		open $file -a "TextEdit"
+	done
+	exit 0
 }
 
 # Exercises
