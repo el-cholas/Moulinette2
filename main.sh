@@ -557,15 +557,15 @@ C-idk () {
 	local exercise=$1
 	local randomInt="$((0 + $RANDOM % 5))"
 	if [ $randomInt == "0" ]; then
-		echo -e $exercise - ${WHITE}"¯\_(ツ)_/¯${NC}"
+		echo -e $exercise - ${WHITE}"¯\_(ツ)_/¯ up to u${NC}"
 	elif [ $randomInt == "1" ]; then
-		echo -e $exercise - ${WHITE}"¯\(º_o)/¯${NC}"
+		echo -e $exercise - ${WHITE}"¯\(º_o)/¯ Up tO yOu${NC}"
 	elif [ $randomInt == "2" ]; then
-		echo -e $exercise - ${WHITE}"٩◔̯◔۶${NC}"
+		echo -e $exercise - ${WHITE}"٩◔̯◔۶ nOt uP to mE${NC}"
 	elif [ $randomInt == "3" ]; then
-		echo -e $exercise - ${WHITE}"ب_ب${NC}"
+		echo -e $exercise - ${WHITE}"ب_ب :( up to u${NC}"
 	elif [ $randomInt == "4" ]; then
-		echo -e $exercise - ${WHITE}"ლ,ᔑ•ﺪ͟͠•ᔐ.ლ${NC}"
+		echo -e $exercise - ${WHITE}"ლ,ᔑ•ﺪ͟͠•ᔐ.ლ up to no good${NC}"
 	fi
 }
 
