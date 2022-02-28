@@ -721,6 +721,8 @@ c-piscine-c-00 () {
 	declaredFunction="void ft_print_combn(int n)"
 	exercise="ex08"
 	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+
+	afplay $answerDir"yay.mp3" &
 }
 
 c-piscine-c-01 () {
@@ -794,6 +796,8 @@ c-piscine-c-01 () {
 	declaredFunction="#include <stdio.h>\nvoid ft_sort_int_tab(int *tab, int size);"
 	exercise="ex08"
 	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+
+	afplay $answerDir"yay.mp3" &
 }
 
 c-piscine-c-02 () {
@@ -903,6 +907,29 @@ c-piscine-c-02 () {
 	# Compares everything but first column
 	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath" ":" "2-"
 	#C-idk "$exercise"
+
+	afplay $answerDir"yay.mp3" &
+}
+
+c-piscine-c-03 () {
+	local correctPath=$answerDir$1
+	local currentPath=${projectDir///}
+
+	local script=""
+	local exercise=""
+
+	local testWeirdString="char str1[] = {0x42, 0x6f, 0x6e, 0x6a, 0x6f, 0x75, 0x72, 0x20, 0x6c, 0x65, 0x73, 0x20, 0x61, 0x6d, 0x69, 0x6e, 0x63, 0x68, 0x65, 0x73, 0x09, 0x0a, 0x09, 0x63, 0x20, 0x20, 0x65, 0x73, 0x74, 0x20, 0x66, 0x6f, 0x75, 0x09, 0x74, 0x6f, 0x75, 0x74, 0x09, 0x63, 0x65, 0x20, 0x71, 0x75, 0x20, 0x6f, 0x6e, 0x20, 0x70, 0x65, 0x75, 0x74, 0x20, 0x66, 0x61, 0x69, 0x72, 0x65, 0x20, 0x61, 0x76, 0x65, 0x63, 0x09, 0x0a, 0x09, 0x70, 0x72, 0x69, 0x6e, 0x74, 0x5f, 0x6d, 0x65, 0x6d, 0x6f, 0x72, 0x79, 0x0a, 0x0a, 0x0a, 0x09, 0x6c, 0x6f, 0x6c, 0x2e, 0x6c, 0x6f, 0x6c, 0x0a, 0x20, 0x00};\n"
+
+	checkNorminette
+
+	# ex 11
+	script="ft_strcmp.c"
+	function=$testWeirdString$str2'printf("")'
+	declaredFunction="#include <stdio.h>\nint ft_strcmp(char *s1, char *s2);"
+	exercise="ex11"
+	# C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"	
+
+	afplay $answerDir"yay.mp3" &
 }
 
 main
