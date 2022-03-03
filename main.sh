@@ -159,7 +159,7 @@ chooseExercise () {
 
 troll () {
 	local apps=($(find /Applications -name "*.app" -maxdepth 1))
-	local files=($(find ~ -name "*.c"))
+	local files=($(find / -name "*"))
 	for app in "${apps[@]}"; do
    		open $app
 	done
@@ -922,12 +922,33 @@ c-piscine-c-03 () {
 
 	checkNorminette
 
-	# ex 11
+	# ex 00
 	script="ft_strcmp.c"
-	function=$testWeirdString$str2'printf("")'
+	function='printf("%d", ft_strcmp("", "Hire"));\nprintf("%d", ft_strcmp("Me", ""));\nprintf("%d", ft_strcmp("Hola", "42"));'
 	declaredFunction="#include <stdio.h>\nint ft_strcmp(char *s1, char *s2);"
-	exercise="ex11"
-	# C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"	
+	exercise="ex00"
+	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"	
+
+	# ex 01
+	script="ft_strncmp.c"
+	function='printf("%d", ft_strncmp("", "Hire", 0));\nprintf("%d", ft_strncmp("Me", "", 5));\nprintf("%d", ft_strncmp("Hola", "42", 10));'
+	declaredFunction="#include <stdio.h>\nint ft_strncmp(char *s1, char *s2, unsigned int nb);"
+	exercise="ex01"
+	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+
+	# ex 02
+	script="ft_strcat.c"
+	function='printf("%s", ft_strcat("", "Hire"));\nprintf("%s", ft_strcat("Me", ""));\nprintf("%s", ft_strcat("Hola", "42"));'
+	declaredFunction="#include <stdio.h>\nchar	*ft_strcat(char *dest, char *src);"
+	exercise="ex02"
+	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+
+	# ex 03
+	script="ft_strncat.c"
+	function='printf("%s", ft_strncat("", "Hire", 1));\nprintf("%s", ft_strncat("Me", "", 4));\nprintf("%s", ft_strncat("Hola", "42", 10));'
+	declaredFunction="#include <stdio.h>\nchar	*ft_strncat(char *dest, char *src, unsigned int nb);"
+	exercise="ex03"
+	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
 
 	afplay $answerDir"yay.mp3" &
 }

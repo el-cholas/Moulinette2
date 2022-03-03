@@ -31,14 +31,3 @@ int	ft_strncmp(char *s1, char *s2, unsigned int n)
 	}
 	return (0);
 }
-
-#include <string.h>
-#include <stdio.h>
-
-int	main(void)
-{
-	char str1[] = "Hola Bebes";
-	char str2[] = "Hola";
-	printf("Original: %d\n", strncmp(str1, str2, 12));
-	printf("Mia: %d\n", ft_strncmp(str1, str2, 12));
-}
