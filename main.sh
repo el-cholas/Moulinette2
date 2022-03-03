@@ -630,6 +630,7 @@ C-executer () {
 		echo -e $exercise - ${GREEN}"$(readJSON "PASS")${NC}"
 	else
 		# Colours
+		afplay $answerDir"mal.mp3" &
 		echo -e $exercise - ${RED}"$(readJSON "FAIL")${NC}"
 		echo -e "\n$exercise" >> $errorFile
 		if [ ${#commandDiff} == "0" ]; then
