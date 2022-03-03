@@ -951,6 +951,27 @@ c-piscine-c-03 () {
 	exercise="ex03"
 	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
 
+	# ex 03
+	script="ft_strncat.c"
+	function='printf("%s", ft_strncat("", "Hire", 1));\nprintf("%s", ft_strncat("Me", "", 4));\nprintf("%s", ft_strncat("Hola", "42", 10));'
+	declaredFunction="#include <stdio.h>\nchar	*ft_strncat(char *dest, char *src, unsigned int nb);"
+	exercise="ex03"
+	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+
+	# ex 04
+	script="ft_strstr.c"
+	function='printf("%s", ft_strstr("H", "Hire"));\nprintf("%s", ft_strstr("Me", "e"));\nprintf("%s", ft_strstr("Hola", "42"));'
+	declaredFunction="#include <stdio.h>\nchar *ft_strstr(char *str, char *to_find);"
+	exercise="ex04"
+	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+
+	# ex 05
+	script="ft_strlcat.c"
+	function='printf("%u", ft_strlcat("Hola ", "42", 2));\nprintf("%u", ft_strlcat(" ", "", 10));\nprintf("%u", ft_strlcat(" ", "42 Ciao", 5));'
+	declaredFunction="#include <stdio.h>\nunsigned int ft_strlcat(char *dest, char *src, unsigned int size);"
+	exercise="ex05"
+	C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+
 	afplay $answerDir"yay.mp3" &
 }
 
