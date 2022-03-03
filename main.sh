@@ -651,6 +651,104 @@ C-executer () {
     fi
 }
 
+bsq-executer () {
+	local commandDiff=$1
+	local testName=$2
+
+	if [ ${#commandDiff} == "0" ]; then
+		# Colours
+		echo -e $testName ${GREEN}"\t$(readJSON "PASS")${NC}"
+	else
+		# Colours
+		afplay $answerDir"mal.mp3" &
+		echo -e $testName ${RED}"\t$(readJSON "FAIL")${NC}"
+		echo -e "\n$commandDiff" >> $errorFile
+		if [ ${#commandDiff} == "0" ]; then
+			echo -e "diff $(readJSON "PASS") :D" >> $errorFile
+		else
+			echo -e "diff $(readJSON "FAIL") :(\n$commandDiff" >> $errorFile
+		fi
+	fi
+}
+
+c-piscine-bsq () {
+	local correctPath=$answerDir$1
+	local currentPath=${projectDir///}
+
+	local script=""
+	local exercise=""
+	local mapsDir="maps"
+
+	checkNorminette
+
+	# ex 00
+	script="ft_strcmp.c"
+	function='printf("%d", ft_strcmp("", "Hire"));\nprintf("%d", ft_strcmp("Me", ""));\nprintf("%d", ft_strcmp("Hola", "42"));'
+	declaredFunction="#include <stdio.h>\nint ft_strcmp(char *s1, char *s2);"
+	exercise="ex00"
+	#C-executer "$script" "$function" "$declaredFunction" "$exercise" "$correctPath" "$currentPath"
+
+	# Create the boys
+	if ! [ -d "$mapsDir" ]; then
+        mkdir $mapsDir
+    fi
+	cd $currentPath
+	make clean && make && make fclean && make && make clean
+	cd $currentDir
+	cd $correctPath
+	make clean && make && make fclean && make && make clean
+	cd $currentDir
+
+	# Create testing maps
+	./$correctPath/map_generator.pl 1 1 0 > $mapsDir/"test1.map"
+	./$correctPath/map_generator.pl 1 1 1 > $mapsDir/"test2.map"
+	./$correctPath/map_generator.pl 10 10 10 > $mapsDir/"test3.map"
+	./$correctPath/map_generator.pl 10 10 2 > $mapsDir/"test4.map"
+	./$correctPath/map_generator.pl 100 100 10 > $mapsDir/"test5.map"
+	./$correctPath/map_generator.pl 1000 1000 100 > $mapsDir/"test6.map"
+
+	echo ""
+	# Test 1
+	local correctOut=$($correctPath/./bsq "test1.map")
+	local studentOut=$($currentPath/./bsq "test1.map")
+	local commandDiff=$(diff <(echo "$correctOut" ) <(echo "$studentOut"))
+	bsq-executer "$commandDiff" "Test with 1 map"
+
+	# Test 2
+	local correctOut=$($correctPath/./bsq $mapsDir/"test2.map" $mapsDir/"test3.map")
+	local studentOut=$($currentPath/./bsq $mapsDir/"test2.map" $mapsDir/"test3.map")
+	local commandDiff=$(diff <(echo "$correctOut" ) <(echo "$studentOut"))
+	bsq-executer "$commandDiff" "Test with 2 maps"
+
+	# Test 3
+	local correctOut=$($correctPath/./bsq < $mapsDir/"test4.map")
+	local studentOut=$($currentPath/./bsq < $mapsDir/"test4.map")
+	local commandDiff=$(diff <(echo "$correctOut" ) <(echo "$studentOut"))
+	bsq-executer "$commandDiff" "Standard Input\t"
+
+	# Test 4
+	local correctOut=$($correctPath/./bsq $mapsDir/"test5.map")
+	local studentOut=$($currentPath/./bsq $mapsDir/"test5.map")
+	local commandDiff=$(diff <(echo "$correctOut" ) <(echo "$studentOut"))
+	bsq-executer "$commandDiff" "100 x 100 Map\t"
+
+	# Test 5
+	local correctOut=$($correctPath/./bsq $mapsDir/"test6.map")
+	local studentOut=$($currentPath/./bsq $mapsDir/"test6.map")
+	local commandDiff=$(diff <(echo "$correctOut" ) <(echo "$studentOut"))
+	bsq-executer "$commandDiff" "1000 x 1000 Map"
+
+	# Test 6
+	local correctOut=$($correctPath/./bsq $mapsDir/"*")
+	local studentOut=$($currentPath/./bsq $mapsDir/"*")
+	local commandDiff=$(diff <(echo "$correctOut" ) <(echo "$studentOut"))
+	bsq-executer "$commandDiff" "Test with N maps"
+
+	rm -rf $mapsDir
+
+	afplay $answerDir"yay.mp3" &
+}
+
 c-piscine-c-00 () {
 	local correctPath=$answerDir$1
 	local currentPath=${projectDir///}
